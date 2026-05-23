@@ -124,32 +124,182 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         </div>
       </section>
 
-      {/* 使用流程 */}
-      <section className="mt-16 rounded-2xl border border-border bg-card p-8 md:p-12">
-        <h2 className="mb-8 text-center font-serif text-2xl font-bold text-foreground">
-          使用流程
-        </h2>
+      {/* 成果展示 */}
+      <section className="mt-16">
+        <div className="mb-8 text-center">
+          <h2 className="font-serif text-2xl font-bold text-foreground">
+            成果品展示
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            为每一位老人打造独一无二的数字回忆录，让人生故事代代相传
+          </p>
+        </div>
         
-        <div className="grid gap-6 md:grid-cols-4">
-          {[
-            { step: 1, title: '填写基本信息', desc: '录入老人姓名、出生年份、家乡' },
-            { step: 2, title: 'AI智能访谈', desc: '六大维度引导老人讲述人生' },
-            { step: 3, title: '素材采集', desc: '上传照片、视频、录制声音' },
-            { step: 4, title: '生成成果', desc: '导出回忆录、家书、家谱' },
-          ].map((item, index) => (
-            <div key={item.step} className="relative">
-              {index < 3 && (
-                <div className="absolute right-0 top-8 hidden h-0.5 w-full -translate-x-8 bg-gradient-to-r from-primary to-transparent md:block" />
-              )}
-              <div className="relative z-10 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-2xl font-bold text-white shadow-lg">
-                  {item.step}
+        {/* 主展示区 - 精选成果 */}
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* 回忆录展示 */}
+          <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-xl">
+            <div className="flex gap-6">
+              <div className="flex-shrink-0">
+                <img 
+                  src="https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_0d4d7729-888e-4218-9ceb-ecd96275c710.jpeg?sign=1811096217-7a4f4d88b6-0-11d69403e54193e8d681b7f6684907e5b50cc85e34cd909b9fb55ceb4ab769a3"
+                  alt="回忆录封面"
+                  className="h-48 w-32 rounded-lg object-cover shadow-lg transition-transform group-hover:scale-105"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                  <span>📚</span>
+                  <span>文字成果</span>
                 </div>
-                <h3 className="mb-2 font-semibold text-foreground">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                <h3 className="mb-2 text-xl font-bold text-foreground">一生回忆录</h3>
+                <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                  AI自动整理润色，从童年到晚年，完整记录老人一生的重要时刻、人生感悟、家族故事。保留原汁原味的语言风格，附精美排版设计。
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-700">电子版云端存档</span>
+                  <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-700">实体精装书印刷</span>
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* 时间轴展示 */}
+          <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-xl">
+            <div className="flex gap-6">
+              <div className="flex-shrink-0">
+                <img 
+                  src="https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_278b54c1-ea42-4bef-a426-f1374313c732.jpeg?sign=1811096214-32fa90ce0e-0-56b6d2ffc6e9eaf45096fc8c13f90e2d4e08347e04da23b45a0469cb1356d49f"
+                  alt="人生时间轴"
+                  className="h-48 w-32 rounded-lg object-cover shadow-lg transition-transform group-hover:scale-105"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
+                  <span>🎨</span>
+                  <span>视觉成果</span>
+                </div>
+                <h3 className="mb-2 text-xl font-bold text-foreground">人生时间轴</h3>
+                <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                  可视化展示一生重要节点：出生、求学、工作、成家、退休...每个时刻都有专属标记，配合照片和文字说明，一目了然。
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="rounded-full bg-green-50 px-2 py-1 text-xs text-green-700">高清海报打印</span>
+                  <span className="rounded-full bg-green-50 px-2 py-1 text-xs text-green-700">重要时刻标注</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 成果价值说明 */}
+        <div className="mt-8 rounded-2xl bg-gradient-to-r from-primary/5 via-accent/5 to-chart-3/5 p-8">
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
+                💝
+              </div>
+              <h4 className="mb-2 font-semibold text-foreground">个人与家族价值</h4>
+              <p className="text-sm text-muted-foreground">
+                为老人完成人生总结，为子女留存祖辈容貌、声音、故事，成为代代相传的家族珍藏
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-2xl">
+                🏘️
+              </div>
+              <h4 className="mb-2 font-semibold text-foreground">乡村文化价值</h4>
+              <p className="text-sm text-muted-foreground">
+                批量留存乡村民间历史、农耕文化、方言乡音，丰富村史馆内容，助力乡村文化振兴
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-chart-3/10 text-2xl">
+                🌟
+              </div>
+              <h4 className="mb-2 font-semibold text-foreground">文创创新价值</h4>
+              <p className="text-sm text-muted-foreground">
+                AI数字文创融合人文温度与前沿技术，开创「人文记忆+数字文创」全新赛道
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 更多成果展示 */}
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {/* 家族树 */}
+          <div className="group overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg">
+            <img 
+              src="https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_ac6aae87-a0bc-4992-a4b1-e7499a5cecf4.jpeg?sign=1811096213-2b8e22ed02-0-d91f0d50e7410527ae94c8775445cee2afa303102b9c7e0eb7f80063912f89cc"
+              alt="家族树图谱"
+              className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+            />
+            <div className="p-4">
+              <h4 className="font-semibold text-foreground">家族树图谱</h4>
+              <p className="mt-1 text-sm text-muted-foreground">可视化家族关系，记录世代传承</p>
+            </div>
+          </div>
+
+          {/* 金句海报 */}
+          <div className="group overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg">
+            <img 
+              src="https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_9dcccaf0-73ad-4465-ba30-ff34b1807e48.jpeg?sign=1811096212-c4969270a5-0-744a434c9cb3ed296fa17e74bf4bc73f9ffee61b03df8e9cf4a6c2b9fcad612f"
+              alt="人生金句海报"
+              className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+            />
+            <div className="p-4">
+              <h4 className="font-semibold text-foreground">人生金句海报</h4>
+              <p className="mt-1 text-sm text-muted-foreground">提炼智慧金句，精美设计装裱</p>
+            </div>
+          </div>
+
+          {/* 数字人 */}
+          <div className="group overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg">
+            <img 
+              src="https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_bda7e27a-2bea-47d8-99f6-c56d088e61f0.jpeg?sign=1811096215-1846892600-0-301ad9f70a8c025842c1061ffb550ff10985b0f6ec360b5ef0046486b2852d47"
+              alt="数字人分身"
+              className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+            />
+            <div className="p-4">
+              <h4 className="font-semibold text-foreground">数字人分身</h4>
+              <p className="mt-1 text-sm text-muted-foreground">AI复刻容貌神态，永久留存形象</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 成果套装推荐 */}
+        <div className="mt-8 rounded-2xl border border-border bg-card p-6">
+          <h3 className="mb-4 text-center font-semibold text-foreground">🎁 成果套装推荐</h3>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-dashed border-border p-4 text-center">
+              <div className="mb-2 text-lg font-bold text-foreground">基础套装</div>
+              <div className="text-sm text-muted-foreground">回忆录 + 家书 + 家谱</div>
+              <div className="mt-2 text-xs text-muted-foreground">适合家庭珍藏</div>
+            </div>
+            <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4 text-center">
+              <div className="mb-1 text-xs font-medium text-primary">🔥 热门推荐</div>
+              <div className="mb-2 text-lg font-bold text-foreground">珍藏套装</div>
+              <div className="text-sm text-muted-foreground">基础 + 时间轴 + 金句海报 + 原声</div>
+            </div>
+            <div className="rounded-xl border border-dashed border-border p-4 text-center">
+              <div className="mb-2 text-lg font-bold text-foreground">传家套装</div>
+              <div className="text-sm text-muted-foreground">珍藏 + 数字人 + 家族树 + 家训</div>
+              <div className="mt-2 text-xs text-muted-foreground">代代相传</div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => onNavigate('interview')}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-medium text-primary-foreground shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+          >
+            <span>开始为老人记录一生</span>
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
         </div>
       </section>
     </div>
