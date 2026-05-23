@@ -373,6 +373,113 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
     }
   };
 
+  // 基本信息语音输入相关状态
+  const [activeVoiceField, setActiveVoiceField] = useState<'name' | 'birthYear' | 'hometown' | null>(null);
+  const [isRecordingBasicInfo, setIsRecordingBasicInfo] = useState(false);
+  const basicInfoAudioLevelRef = useRef(0);
+  const basicInfoMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const basicInfoAudioChunksRef = useRef<Blob[]>([]);
+  const basicInfoStreamRef = useRef<MediaStream | null>(null);
+
+  // 基本信息语音录制
+  const startBasicInfoRecording = async (field: 'name' | 'birthYear' | 'hometown') => {
+    try {
+      setActiveVoiceField(field);
+      setIsRecordingBasicInfo(true);
+      basicInfoAudioChunksRef.current = [];
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 16000,
+        },
+      });
+      basicInfoStreamRef.current = stream;
+
+      // 音频电平分析
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      const source = audioContext.createMediaStreamSource(stream);
+      source.connect(analyser);
+      analyser.fftSize = 256;
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      
+      const updateLevel = () => {
+        if (!isRecordingBasicInfo) return;
+        analyser.getByteFrequencyData(dataArray);
+        const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+        basicInfoAudioLevelRef.current = average / 255;
+        
+        // 强制更新组件
+        setAudioLevel(basicInfoAudioLevelRef.current);
+        requestAnimationFrame(updateLevel);
+      };
+      updateLevel();
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4',
+      });
+      basicInfoMediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          basicInfoAudioChunksRef.current.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        setIsRecordingBasicInfo(false);
+        setActiveVoiceField(null);
+        
+        // 停止所有音轨
+        stream.getTracks().forEach(track => track.stop());
+        
+        // 处理录音
+        const audioBlob = new Blob(basicInfoAudioChunksRef.current, {
+          type: mediaRecorder.mimeType,
+        });
+
+        // 调用 ASR API
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
+
+        try {
+          const response = await fetch('/api/asr', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            if (result.text) {
+              // 根据当前字段填充
+              setTempBasicInfo(prev => ({
+                ...prev,
+                [field]: result.text.trim(),
+              }));
+            }
+          }
+        } catch (error) {
+          console.error('语音识别失败:', error);
+        }
+      };
+
+      mediaRecorder.start();
+    } catch (error) {
+      console.error('无法访问麦克风:', error);
+      setIsRecordingBasicInfo(false);
+      setActiveVoiceField(null);
+    }
+  };
+
+  const stopBasicInfoRecording = () => {
+    if (basicInfoMediaRecorderRef.current && isRecordingBasicInfo) {
+      basicInfoMediaRecorderRef.current.stop();
+    }
+  };
+
   // 基本信息填写界面
   if (showBasicInfo) {
     return (
@@ -381,47 +488,161 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
           <div className="mb-8 text-center">
             <div className="mb-4 text-4xl">👤</div>
             <h2 className="font-serif text-2xl font-bold text-foreground">填写基本信息</h2>
-            <p className="mt-2 text-muted-foreground">请录入老人的基本信息，开始访谈之旅</p>
+            <p className="mt-2 text-muted-foreground">点击语音按钮，说出信息即可自动填写</p>
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-8">
+            {/* 姓名输入 */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">
+              <label className="mb-3 block text-sm font-medium text-foreground">
                 老人姓名 <span className="text-destructive">*</span>
               </label>
-              <input
-                type="text"
-                value={tempBasicInfo.name}
-                onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, name: e.target.value })}
-                className="w-full rounded-lg border border-input bg-background px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="请输入老人姓名"
-              />
+              <div className="flex items-center gap-4">
+                {/* 语音按钮 */}
+                <button
+                  type="button"
+                  onClick={() => isRecordingBasicInfo && activeVoiceField === 'name' 
+                    ? stopBasicInfoRecording() 
+                    : startBasicInfoRecording('name')}
+                  disabled={isRecordingBasicInfo && activeVoiceField !== 'name'}
+                  className={`
+                    relative flex-shrink-0
+                    w-20 h-20 rounded-full
+                    flex items-center justify-center
+                    shadow-xl
+                    transition-all duration-300 ease-out
+                    ${isRecordingBasicInfo && activeVoiceField === 'name'
+                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
+                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
+                    }
+                    ${isRecordingBasicInfo && activeVoiceField !== 'name' ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                >
+                  {isRecordingBasicInfo && activeVoiceField === 'name' && (
+                    <>
+                      <div className="absolute -inset-3 rounded-full bg-red-400 opacity-20 animate-ping" />
+                      <div 
+                        className="absolute -inset-2 rounded-full border-4 border-red-300"
+                        style={{ 
+                          transform: `scale(${1 + audioLevel * 0.3})`,
+                          opacity: 0.3 + audioLevel * 0.5
+                        }}
+                      />
+                    </>
+                  )}
+                  <Mic className={`w-8 h-8 text-white ${isRecordingBasicInfo && activeVoiceField === 'name' ? 'animate-pulse' : ''}`} />
+                </button>
+                {/* 文字输入 */}
+                <input
+                  type="text"
+                  value={tempBasicInfo.name}
+                  onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, name: e.target.value })}
+                  className="flex-1 rounded-lg border border-input bg-background px-4 py-4 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  placeholder={isRecordingBasicInfo && activeVoiceField === 'name' ? '正在听...' : '点击左侧按钮说话，或直接输入'}
+                />
+              </div>
             </div>
             
+            {/* 出生年份输入 */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">
+              <label className="mb-3 block text-sm font-medium text-foreground">
                 出生年份
               </label>
-              <input
-                type="text"
-                value={tempBasicInfo.birthYear}
-                onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, birthYear: e.target.value })}
-                className="w-full rounded-lg border border-input bg-background px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="例如：1950年"
-              />
+              <div className="flex items-center gap-4">
+                {/* 语音按钮 */}
+                <button
+                  type="button"
+                  onClick={() => isRecordingBasicInfo && activeVoiceField === 'birthYear' 
+                    ? stopBasicInfoRecording() 
+                    : startBasicInfoRecording('birthYear')}
+                  disabled={isRecordingBasicInfo && activeVoiceField !== 'birthYear'}
+                  className={`
+                    relative flex-shrink-0
+                    w-20 h-20 rounded-full
+                    flex items-center justify-center
+                    shadow-xl
+                    transition-all duration-300 ease-out
+                    ${isRecordingBasicInfo && activeVoiceField === 'birthYear'
+                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
+                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
+                    }
+                    ${isRecordingBasicInfo && activeVoiceField !== 'birthYear' ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                >
+                  {isRecordingBasicInfo && activeVoiceField === 'birthYear' && (
+                    <>
+                      <div className="absolute -inset-3 rounded-full bg-red-400 opacity-20 animate-ping" />
+                      <div 
+                        className="absolute -inset-2 rounded-full border-4 border-red-300"
+                        style={{ 
+                          transform: `scale(${1 + audioLevel * 0.3})`,
+                          opacity: 0.3 + audioLevel * 0.5
+                        }}
+                      />
+                    </>
+                  )}
+                  <Mic className={`w-8 h-8 text-white ${isRecordingBasicInfo && activeVoiceField === 'birthYear' ? 'animate-pulse' : ''}`} />
+                </button>
+                {/* 文字输入 */}
+                <input
+                  type="text"
+                  value={tempBasicInfo.birthYear}
+                  onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, birthYear: e.target.value })}
+                  className="flex-1 rounded-lg border border-input bg-background px-4 py-4 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  placeholder={isRecordingBasicInfo && activeVoiceField === 'birthYear' ? '正在听...' : '点击左侧按钮说话，或直接输入'}
+                />
+              </div>
             </div>
             
+            {/* 家乡输入 */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">
+              <label className="mb-3 block text-sm font-medium text-foreground">
                 家乡
               </label>
-              <input
-                type="text"
-                value={tempBasicInfo.hometown}
-                onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, hometown: e.target.value })}
-                className="w-full rounded-lg border border-input bg-background px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                placeholder="例如：山东省某村"
-              />
+              <div className="flex items-center gap-4">
+                {/* 语音按钮 */}
+                <button
+                  type="button"
+                  onClick={() => isRecordingBasicInfo && activeVoiceField === 'hometown' 
+                    ? stopBasicInfoRecording() 
+                    : startBasicInfoRecording('hometown')}
+                  disabled={isRecordingBasicInfo && activeVoiceField !== 'hometown'}
+                  className={`
+                    relative flex-shrink-0
+                    w-20 h-20 rounded-full
+                    flex items-center justify-center
+                    shadow-xl
+                    transition-all duration-300 ease-out
+                    ${isRecordingBasicInfo && activeVoiceField === 'hometown'
+                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
+                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
+                    }
+                    ${isRecordingBasicInfo && activeVoiceField !== 'hometown' ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                >
+                  {isRecordingBasicInfo && activeVoiceField === 'hometown' && (
+                    <>
+                      <div className="absolute -inset-3 rounded-full bg-red-400 opacity-20 animate-ping" />
+                      <div 
+                        className="absolute -inset-2 rounded-full border-4 border-red-300"
+                        style={{ 
+                          transform: `scale(${1 + audioLevel * 0.3})`,
+                          opacity: 0.3 + audioLevel * 0.5
+                        }}
+                      />
+                    </>
+                  )}
+                  <Mic className={`w-8 h-8 text-white ${isRecordingBasicInfo && activeVoiceField === 'hometown' ? 'animate-pulse' : ''}`} />
+                </button>
+                {/* 文字输入 */}
+                <input
+                  type="text"
+                  value={tempBasicInfo.hometown}
+                  onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, hometown: e.target.value })}
+                  className="flex-1 rounded-lg border border-input bg-background px-4 py-4 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  placeholder={isRecordingBasicInfo && activeVoiceField === 'hometown' ? '正在听...' : '点击左侧按钮说话，或直接输入'}
+                />
+              </div>
             </div>
             
             <button
