@@ -8,9 +8,22 @@ interface OutputSectionProps {
   materialData: MaterialData;
 }
 
-type OutputType = 'memoir' | 'letter' | 'genealogy' | 'digital-human';
+type OutputType = 
+  | 'memoir' 
+  | 'letter' 
+  | 'genealogy' 
+  | 'family-motto'
+  | 'timeline'
+  | 'family-tree'
+  | 'quote-poster'
+  | 'voice-album'
+  | 'digital-human'
+  | 'blessing-video';
+
+type Category = 'text' | 'visual' | 'voice' | 'video';
 
 export function OutputSection({ interviewData, materialData }: OutputSectionProps) {
+  const [activeCategory, setActiveCategory] = useState<Category>('text');
   const [activeOutput, setActiveOutput] = useState<OutputType>('memoir');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState('');
@@ -72,7 +85,6 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
   };
 
   const handleDownload = (format: 'pdf' | 'word' | 'html') => {
-    // 创建下载内容
     const content = `
       <html>
         <head>
@@ -130,36 +142,111 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
     }
   };
 
-  const outputs = [
-    {
-      key: 'memoir',
-      label: '一生回忆录',
-      icon: '📖',
-      description: '根据访谈记录，自动整理生成完整的个人回忆录',
-      features: ['电子版云端存档', '精美排版设计', '支持打印输出'],
-    },
-    {
-      key: 'letter',
-      label: '温馨家书',
-      icon: '✉️',
-      description: '老人对家人的寄语和嘱托，传承家风和人生智慧',
-      features: ['个性化家书内容', '多版本生成', '手写信风格'],
-    },
-    {
-      key: 'genealogy',
-      label: '家族家谱',
-      icon: '🌳',
-      description: '记录家族血脉传承，建立家族关系图谱',
-      features: ['家族关系图', '世代传承记录', '多人协作完善'],
-    },
-    {
-      key: 'digital-human',
-      label: '数字人分身',
-      icon: '🤖',
-      description: '基于照片和视频生成老人的数字人形象',
-      features: ['1:1形象复刻', '语音播报能力', '动态影像展示'],
-    },
+  // 成果分类
+  const categories = [
+    { key: 'text', label: '文字成果', icon: '📚', color: 'from-amber-500 to-orange-500' },
+    { key: 'visual', label: '视觉成果', icon: '🎨', color: 'from-purple-500 to-pink-500' },
+    { key: 'voice', label: '声音成果', icon: '🎤', color: 'from-blue-500 to-cyan-500' },
+    { key: 'video', label: '视频成果', icon: '🎬', color: 'from-red-500 to-rose-500' },
   ];
+
+  // 各类成果定义
+  const outputsByCategory: Record<Category, Array<{
+    key: OutputType;
+    label: string;
+    icon: string;
+    description: string;
+    features: string[];
+    badge?: string;
+    comingSoon?: boolean;
+  }>> = {
+    text: [
+      {
+        key: 'memoir',
+        label: '一生回忆录',
+        icon: '📖',
+        description: '完整记录老人一生故事，传承家族记忆',
+        features: ['自动整理润色', '精美排版设计', '电子版+实体书'],
+      },
+      {
+        key: 'letter',
+        label: '温馨家书',
+        icon: '✉️',
+        description: '老人对家人的深情寄语和嘱托',
+        features: ['个性化内容', '手写信风格', '多版本生成'],
+      },
+      {
+        key: 'genealogy',
+        label: '家族家谱',
+        icon: '🌳',
+        description: '记录家族血脉传承，建立世代关系',
+        features: ['家族关系图', '世代传承记录', '多人协作完善'],
+      },
+      {
+        key: 'family-motto',
+        label: '家训家规',
+        icon: '📜',
+        description: '提炼家风家训，传承家族精神',
+        features: ['人生智慧结晶', '家风传承', '后代教育'],
+        badge: '新',
+      },
+    ],
+    visual: [
+      {
+        key: 'timeline',
+        label: '人生时间轴',
+        icon: '⏳',
+        description: '可视化展示老人一生的重要节点',
+        features: ['时间线图表', '重要事件标注', '照片时间轴'],
+        badge: '热门',
+      },
+      {
+        key: 'family-tree',
+        label: '家族树图谱',
+        icon: '🌲',
+        description: '直观展示家族成员关系',
+        features: ['可视化家族树', '成员照片墙', '关系标注'],
+        badge: '新',
+      },
+      {
+        key: 'quote-poster',
+        label: '人生金句海报',
+        icon: '🖼️',
+        description: '提炼老人智慧金句，生成精美海报',
+        features: ['AI提炼金句', '精美设计', '可打印装裱'],
+        badge: '热门',
+      },
+    ],
+    voice: [
+      {
+        key: 'voice-album',
+        label: '原声留声机',
+        icon: '🎙️',
+        description: '保存老人的原声录音，永久留存乡音',
+        features: ['原声保存', '方言收录', '云端存档'],
+      },
+    ],
+    video: [
+      {
+        key: 'digital-human',
+        label: '数字人分身',
+        icon: '🤖',
+        description: '基于照片视频生成1:1复刻数字人',
+        features: ['形象复刻', '语音播报', '动态影像'],
+        badge: '核心',
+      },
+      {
+        key: 'blessing-video',
+        label: '祝福视频',
+        icon: '🎥',
+        description: '数字人生成节日祝福、生日祝福视频',
+        features: ['节日祝福', '生日祝寿', '家族聚会'],
+        badge: '新',
+      },
+    ],
+  };
+
+  const currentOutputs = outputsByCategory[activeCategory];
 
   const stats = [
     { label: '访谈对话', value: interviewData.conversations.length, icon: '💬' },
@@ -167,6 +254,14 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
     { label: '上传视频', value: materialData.videos.length, icon: '🎬' },
     { label: '声音样本', value: materialData.voiceSamples.length, icon: '🎤' },
   ];
+
+  const getOutputInfo = (key: OutputType) => {
+    for (const outputs of Object.values(outputsByCategory)) {
+      const found = outputs.find(o => o.key === key);
+      if (found) return found;
+    }
+    return null;
+  };
 
   return (
     <div className="py-12">
@@ -184,21 +279,47 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         </div>
       </div>
 
+      {/* 成果分类标签 */}
+      <div className="mb-6 flex gap-3">
+        {categories.map((category) => (
+          <button
+            key={category.key}
+            onClick={() => {
+              setActiveCategory(category.key as Category);
+              setActiveOutput(outputsByCategory[category.key as Category][0].key);
+            }}
+            className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
+              activeCategory === category.key
+                ? `bg-gradient-to-r ${category.color} text-white shadow-lg`
+                : 'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+            }`}
+          >
+            <span>{category.icon}</span>
+            <span>{category.label}</span>
+          </button>
+        ))}
+      </div>
+
       {/* 输出类型选择 */}
       <div className="mb-8 grid grid-cols-4 gap-4">
-        {outputs.map((output) => (
+        {currentOutputs.map((output) => (
           <button
             key={output.key}
-            onClick={() => setActiveOutput(output.key as OutputType)}
-            className={`rounded-2xl border p-6 text-left transition-all ${
+            onClick={() => setActiveOutput(output.key)}
+            className={`relative overflow-hidden rounded-2xl border p-5 text-left transition-all ${
               activeOutput === output.key
                 ? 'border-primary bg-primary/5 shadow-lg'
                 : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
             }`}
           >
-            <div className="mb-3 text-3xl">{output.icon}</div>
+            {output.badge && (
+              <span className="absolute right-2 top-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                {output.badge}
+              </span>
+            )}
+            <div className="mb-2 text-3xl">{output.icon}</div>
             <h3 className="mb-1 font-semibold text-foreground">{output.label}</h3>
-            <p className="text-xs text-muted-foreground">{output.description}</p>
+            <p className="line-clamp-2 text-xs text-muted-foreground">{output.description}</p>
           </button>
         ))}
       </div>
@@ -208,16 +329,16 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-foreground">
-              {outputs.find(o => o.key === activeOutput)?.label}
+              {getOutputInfo(activeOutput)?.icon} {getOutputInfo(activeOutput)?.label}
             </h2>
             <p className="mt-1 text-muted-foreground">
-              {outputs.find(o => o.key === activeOutput)?.description}
+              {getOutputInfo(activeOutput)?.description}
             </p>
           </div>
           <button
             onClick={() => handleGenerate(activeOutput)}
             disabled={isGenerating || interviewData.conversations.length === 0}
-            className="rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 font-medium text-primary-foreground shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isGenerating ? (
               <span className="flex items-center gap-2">
@@ -239,7 +360,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full bg-primary transition-all duration-300"
+                className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -290,7 +411,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         ) : (
           <div className="rounded-xl border-2 border-dashed border-border p-12 text-center">
             <div className="mb-4 text-4xl">
-              {outputs.find(o => o.key === activeOutput)?.icon}
+              {getOutputInfo(activeOutput)?.icon}
             </div>
             <p className="text-muted-foreground">
               {interviewData.conversations.length === 0
@@ -302,7 +423,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
 
         {/* 功能说明 */}
         <div className="mt-8 grid grid-cols-3 gap-4">
-          {outputs.find(o => o.key === activeOutput)?.features.map((feature, index) => (
+          {getOutputInfo(activeOutput)?.features.map((feature, index) => (
             <div key={index} className="rounded-lg bg-muted p-4 text-center">
               <span className="text-sm text-muted-foreground">{feature}</span>
             </div>
@@ -324,6 +445,34 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
           </div>
         </div>
       )}
+
+      {/* 成果套装推荐 */}
+      <div className="mt-12">
+        <h3 className="mb-6 text-center text-xl font-bold text-foreground">🎁 成果套装推荐</h3>
+        <div className="grid grid-cols-3 gap-6">
+          <div className="rounded-2xl border border-border bg-card p-6 text-center transition-all hover:shadow-lg">
+            <div className="mb-3 text-3xl">📦</div>
+            <h4 className="mb-2 font-bold text-foreground">基础套装</h4>
+            <p className="mb-4 text-sm text-muted-foreground">回忆录 + 家书 + 家谱</p>
+            <div className="text-primary font-bold">适合家庭珍藏</div>
+          </div>
+          <div className="relative rounded-2xl border-2 border-primary bg-gradient-to-b from-primary/5 to-card p-6 text-center shadow-lg">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground">
+              推荐
+            </span>
+            <div className="mb-3 text-3xl">💝</div>
+            <h4 className="mb-2 font-bold text-foreground">珍藏套装</h4>
+            <p className="mb-4 text-sm text-muted-foreground">基础套装 + 时间轴 + 金句海报 + 原声</p>
+            <div className="text-primary font-bold">适合代代相传</div>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-6 text-center transition-all hover:shadow-lg">
+            <div className="mb-3 text-3xl">👑</div>
+            <h4 className="mb-2 font-bold text-foreground">传家套装</h4>
+            <p className="mb-4 text-sm text-muted-foreground">珍藏套装 + 数字人 + 家族树 + 家训</p>
+            <div className="text-primary font-bold">适合家族传承</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
