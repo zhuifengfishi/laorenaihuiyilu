@@ -20,10 +20,116 @@ type OutputType =
   | 'digital-human'
   | 'blessing-video';
 
-type Category = 'text' | 'visual' | 'voice' | 'video';
+// 所有成果定义 - 直接平铺展示
+const allOutputs: Array<{
+  key: OutputType;
+  label: string;
+  icon: string;
+  description: string;
+  features: string[];
+  badge?: string;
+  category: string;
+  categoryColor: string;
+}> = [
+  {
+    key: 'memoir',
+    label: '一生回忆录',
+    icon: '📖',
+    description: '完整记录老人一生故事，传承家族记忆',
+    features: ['自动整理润色', '精美排版设计', '电子版+实体书'],
+    category: '文字成果',
+    categoryColor: 'bg-amber-100 text-amber-700',
+  },
+  {
+    key: 'letter',
+    label: '温馨家书',
+    icon: '✉️',
+    description: '老人对家人的深情寄语和嘱托',
+    features: ['个性化内容', '手写信风格', '多版本生成'],
+    category: '文字成果',
+    categoryColor: 'bg-amber-100 text-amber-700',
+  },
+  {
+    key: 'genealogy',
+    label: '家族家谱',
+    icon: '🌳',
+    description: '记录家族血脉传承，建立世代关系',
+    features: ['家族关系图', '世代传承记录', '多人协作完善'],
+    category: '文字成果',
+    categoryColor: 'bg-amber-100 text-amber-700',
+  },
+  {
+    key: 'family-motto',
+    label: '家训家规',
+    icon: '📜',
+    description: '提炼家风家训，传承家族精神',
+    features: ['人生智慧结晶', '家风传承', '后代教育'],
+    badge: '新',
+    category: '文字成果',
+    categoryColor: 'bg-amber-100 text-amber-700',
+  },
+  {
+    key: 'timeline',
+    label: '人生时间轴',
+    icon: '⏳',
+    description: '可视化展示老人一生的重要节点',
+    features: ['时间线图表', '重要事件标注', '照片时间轴'],
+    badge: '热门',
+    category: '视觉成果',
+    categoryColor: 'bg-purple-100 text-purple-700',
+  },
+  {
+    key: 'family-tree',
+    label: '家族树图谱',
+    icon: '🌲',
+    description: '直观展示家族成员关系',
+    features: ['可视化家族树', '成员照片墙', '关系标注'],
+    badge: '新',
+    category: '视觉成果',
+    categoryColor: 'bg-purple-100 text-purple-700',
+  },
+  {
+    key: 'quote-poster',
+    label: '人生金句海报',
+    icon: '🖼️',
+    description: '提炼老人智慧金句，生成精美海报',
+    features: ['AI提炼金句', '精美设计', '可打印装裱'],
+    badge: '热门',
+    category: '视觉成果',
+    categoryColor: 'bg-purple-100 text-purple-700',
+  },
+  {
+    key: 'voice-album',
+    label: '原声留声机',
+    icon: '🎙️',
+    description: '保存老人的原声录音，永久留存乡音',
+    features: ['原声保存', '方言收录', '云端存档'],
+    category: '声音成果',
+    categoryColor: 'bg-blue-100 text-blue-700',
+  },
+  {
+    key: 'digital-human',
+    label: '数字人分身',
+    icon: '🤖',
+    description: '基于照片视频生成1:1复刻数字人',
+    features: ['形象复刻', '语音播报', '动态影像'],
+    badge: '核心',
+    category: '视频成果',
+    categoryColor: 'bg-red-100 text-red-700',
+  },
+  {
+    key: 'blessing-video',
+    label: '祝福视频',
+    icon: '🎥',
+    description: '数字人生成节日祝福、生日祝福视频',
+    features: ['节日祝福', '生日祝寿', '家族聚会'],
+    badge: '新',
+    category: '视频成果',
+    categoryColor: 'bg-red-100 text-red-700',
+  },
+];
 
 export function OutputSection({ interviewData, materialData }: OutputSectionProps) {
-  const [activeCategory, setActiveCategory] = useState<Category>('text');
   const [activeOutput, setActiveOutput] = useState<OutputType>('memoir');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState('');
@@ -142,112 +248,6 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
     }
   };
 
-  // 成果分类
-  const categories = [
-    { key: 'text', label: '文字成果', icon: '📚', color: 'from-amber-500 to-orange-500' },
-    { key: 'visual', label: '视觉成果', icon: '🎨', color: 'from-purple-500 to-pink-500' },
-    { key: 'voice', label: '声音成果', icon: '🎤', color: 'from-blue-500 to-cyan-500' },
-    { key: 'video', label: '视频成果', icon: '🎬', color: 'from-red-500 to-rose-500' },
-  ];
-
-  // 各类成果定义
-  const outputsByCategory: Record<Category, Array<{
-    key: OutputType;
-    label: string;
-    icon: string;
-    description: string;
-    features: string[];
-    badge?: string;
-    comingSoon?: boolean;
-  }>> = {
-    text: [
-      {
-        key: 'memoir',
-        label: '一生回忆录',
-        icon: '📖',
-        description: '完整记录老人一生故事，传承家族记忆',
-        features: ['自动整理润色', '精美排版设计', '电子版+实体书'],
-      },
-      {
-        key: 'letter',
-        label: '温馨家书',
-        icon: '✉️',
-        description: '老人对家人的深情寄语和嘱托',
-        features: ['个性化内容', '手写信风格', '多版本生成'],
-      },
-      {
-        key: 'genealogy',
-        label: '家族家谱',
-        icon: '🌳',
-        description: '记录家族血脉传承，建立世代关系',
-        features: ['家族关系图', '世代传承记录', '多人协作完善'],
-      },
-      {
-        key: 'family-motto',
-        label: '家训家规',
-        icon: '📜',
-        description: '提炼家风家训，传承家族精神',
-        features: ['人生智慧结晶', '家风传承', '后代教育'],
-        badge: '新',
-      },
-    ],
-    visual: [
-      {
-        key: 'timeline',
-        label: '人生时间轴',
-        icon: '⏳',
-        description: '可视化展示老人一生的重要节点',
-        features: ['时间线图表', '重要事件标注', '照片时间轴'],
-        badge: '热门',
-      },
-      {
-        key: 'family-tree',
-        label: '家族树图谱',
-        icon: '🌲',
-        description: '直观展示家族成员关系',
-        features: ['可视化家族树', '成员照片墙', '关系标注'],
-        badge: '新',
-      },
-      {
-        key: 'quote-poster',
-        label: '人生金句海报',
-        icon: '🖼️',
-        description: '提炼老人智慧金句，生成精美海报',
-        features: ['AI提炼金句', '精美设计', '可打印装裱'],
-        badge: '热门',
-      },
-    ],
-    voice: [
-      {
-        key: 'voice-album',
-        label: '原声留声机',
-        icon: '🎙️',
-        description: '保存老人的原声录音，永久留存乡音',
-        features: ['原声保存', '方言收录', '云端存档'],
-      },
-    ],
-    video: [
-      {
-        key: 'digital-human',
-        label: '数字人分身',
-        icon: '🤖',
-        description: '基于照片视频生成1:1复刻数字人',
-        features: ['形象复刻', '语音播报', '动态影像'],
-        badge: '核心',
-      },
-      {
-        key: 'blessing-video',
-        label: '祝福视频',
-        icon: '🎥',
-        description: '数字人生成节日祝福、生日祝福视频',
-        features: ['节日祝福', '生日祝寿', '家族聚会'],
-        badge: '新',
-      },
-    ],
-  };
-
-  const currentOutputs = outputsByCategory[activeCategory];
-
   const stats = [
     { label: '访谈对话', value: interviewData.conversations.length, icon: '💬' },
     { label: '上传照片', value: materialData.photos.length, icon: '📷' },
@@ -256,11 +256,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
   ];
 
   const getOutputInfo = (key: OutputType) => {
-    for (const outputs of Object.values(outputsByCategory)) {
-      const found = outputs.find(o => o.key === key);
-      if (found) return found;
-    }
-    return null;
+    return allOutputs.find(o => o.key === key);
   };
 
   return (
@@ -279,49 +275,38 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         </div>
       </div>
 
-      {/* 成果分类标签 */}
-      <div className="mb-6 flex gap-3">
-        {categories.map((category) => (
-          <button
-            key={category.key}
-            onClick={() => {
-              setActiveCategory(category.key as Category);
-              setActiveOutput(outputsByCategory[category.key as Category][0].key);
-            }}
-            className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all ${
-              activeCategory === category.key
-                ? `bg-gradient-to-r ${category.color} text-white shadow-lg`
-                : 'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
-            }`}
-          >
-            <span>{category.icon}</span>
-            <span>{category.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* 输出类型选择 */}
-      <div className="mb-8 grid grid-cols-4 gap-4">
-        {currentOutputs.map((output) => (
-          <button
-            key={output.key}
-            onClick={() => setActiveOutput(output.key)}
-            className={`relative overflow-hidden rounded-2xl border p-5 text-left transition-all ${
-              activeOutput === output.key
-                ? 'border-primary bg-primary/5 shadow-lg'
-                : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
-            }`}
-          >
-            {output.badge && (
-              <span className="absolute right-2 top-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                {output.badge}
+      {/* 所有成果展示 - 直接平铺 */}
+      <div className="mb-8">
+        <h3 className="mb-4 text-lg font-semibold text-foreground">选择要生成的成果</h3>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+          {allOutputs.map((output) => (
+            <button
+              key={output.key}
+              onClick={() => setActiveOutput(output.key)}
+              className={`relative overflow-hidden rounded-2xl border p-4 text-left transition-all ${
+                activeOutput === output.key
+                  ? 'border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20'
+                  : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+              }`}
+            >
+              {/* 分类标签 */}
+              <span className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-xs ${output.categoryColor}`}>
+                {output.category}
               </span>
-            )}
-            <div className="mb-2 text-3xl">{output.icon}</div>
-            <h3 className="mb-1 font-semibold text-foreground">{output.label}</h3>
-            <p className="line-clamp-2 text-xs text-muted-foreground">{output.description}</p>
-          </button>
-        ))}
+              
+              {/* 热门/新标签 */}
+              {output.badge && (
+                <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                  {output.badge}
+                </span>
+              )}
+              
+              <div className="mt-6 mb-2 text-3xl">{output.icon}</div>
+              <h3 className="mb-1 text-sm font-semibold text-foreground">{output.label}</h3>
+              <p className="line-clamp-2 text-xs text-muted-foreground">{output.description}</p>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 生成区域 */}
@@ -448,28 +433,57 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
 
       {/* 成果套装推荐 */}
       <div className="mt-12">
-        <h3 className="mb-6 text-center text-xl font-bold text-foreground">🎁 成果套装推荐</h3>
-        <div className="grid grid-cols-3 gap-6">
-          <div className="rounded-2xl border border-border bg-card p-6 text-center transition-all hover:shadow-lg">
-            <div className="mb-3 text-3xl">📦</div>
-            <h4 className="mb-2 font-bold text-foreground">基础套装</h4>
-            <p className="mb-4 text-sm text-muted-foreground">回忆录 + 家书 + 家谱</p>
-            <div className="text-primary font-bold">适合家庭珍藏</div>
+        <h3 className="mb-4 text-lg font-semibold text-foreground">🎁 成果套装推荐</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-lg">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-2xl">📦</span>
+              <h4 className="font-semibold text-foreground">基础套装</h4>
+            </div>
+            <p className="mb-3 text-sm text-muted-foreground">家庭珍藏必备</p>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">回忆录</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家书</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家谱</span>
+            </div>
           </div>
-          <div className="relative rounded-2xl border-2 border-primary bg-gradient-to-b from-primary/5 to-card p-6 text-center shadow-lg">
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground">
-              推荐
+
+          <div className="relative rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-accent/5 p-6 shadow-lg">
+            <span className="absolute -top-3 left-4 rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground">
+              🔥 推荐
             </span>
-            <div className="mb-3 text-3xl">💝</div>
-            <h4 className="mb-2 font-bold text-foreground">珍藏套装</h4>
-            <p className="mb-4 text-sm text-muted-foreground">基础套装 + 时间轴 + 金句海报 + 原声</p>
-            <div className="text-primary font-bold">适合代代相传</div>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-2xl">💝</span>
+              <h4 className="font-semibold text-foreground">珍藏套装</h4>
+            </div>
+            <p className="mb-3 text-sm text-muted-foreground">代代相传之宝</p>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">回忆录</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家书</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家谱</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">时间轴</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">金句海报</span>
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-700">原声</span>
+            </div>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-6 text-center transition-all hover:shadow-lg">
-            <div className="mb-3 text-3xl">👑</div>
-            <h4 className="mb-2 font-bold text-foreground">传家套装</h4>
-            <p className="mb-4 text-sm text-muted-foreground">珍藏套装 + 数字人 + 家族树 + 家训</p>
-            <div className="text-primary font-bold">适合家族传承</div>
+
+          <div className="rounded-2xl border border-border bg-card p-6 transition-all hover:shadow-lg">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-2xl">👑</span>
+              <h4 className="font-semibold text-foreground">传家套装</h4>
+            </div>
+            <p className="mb-3 text-sm text-muted-foreground">顶级珍藏全套</p>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">回忆录</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家书</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家谱</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家训</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">时间轴</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">家族树</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">金句海报</span>
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-700">原声</span>
+              <span className="rounded-full bg-red-100 px-3 py-1 text-xs text-red-700">数字人</span>
+            </div>
           </div>
         </div>
       </div>
