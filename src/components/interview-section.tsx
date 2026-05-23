@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { Mic, MicOff, Loader2, Keyboard } from 'lucide-react';
 import type { InterviewData } from '@/app/page';
 
 interface InterviewSectionProps {
@@ -93,7 +94,18 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
   const [showBasicInfo, setShowBasicInfo] = useState(!data.basicInfo.name);
   const [tempBasicInfo, setTempBasicInfo] = useState(data.basicInfo);
   
+  // Voice input states
+  const [isRecording, setIsRecording] = useState(false);
+  const [isProcessingVoice, setIsProcessingVoice] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice'); // Default to voice mode
+  
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
 
   useEffect(() => {
@@ -101,6 +113,138 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+
+  // Analyze audio level for visual feedback
+  const analyzeAudio = () => {
+    if (!analyserRef.current || !isRecording) return;
+
+    const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+    analyserRef.current.getByteFrequencyData(dataArray);
+    
+    const average = dataArray.reduce((a: number, b: number) => a + b, 0) / dataArray.length;
+    setAudioLevel(average / 255);
+
+    animationRef.current = requestAnimationFrame(analyzeAudio);
+  };
+
+  // Start voice recording
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 16000
+        } 
+      });
+      
+      streamRef.current = stream;
+
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      source.connect(analyser);
+      analyserRef.current = analyser;
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
+      });
+      
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach(track => track.stop());
+        
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
+
+        const audioBlob = new Blob(audioChunksRef.current, { 
+          type: mediaRecorder.mimeType 
+        });
+        
+        await processVoiceAudio(audioBlob);
+      };
+
+      mediaRecorder.start(100);
+      setIsRecording(true);
+      analyzeAudio();
+
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      alert('无法访问麦克风，请确保已授予权限');
+    }
+  };
+
+  // Stop voice recording
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      setAudioLevel(0);
+    }
+  };
+
+  // Process recorded audio
+  const processVoiceAudio = async (audioBlob: Blob) => {
+    setIsProcessingVoice(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const base64Data = (reader.result as string).split(',')[1];
+          
+          const response = await fetch('/api/asr', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              base64Data,
+              format: audioBlob.type.includes('webm') ? 'webm' : 'mp4'
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('语音识别失败');
+          }
+
+          const data = await response.json();
+          
+          if (data.text) {
+            setUserInput(data.text);
+          }
+        } catch (error) {
+          console.error('Error processing audio:', error);
+          alert('语音识别失败，请重试');
+        } finally {
+          setIsProcessingVoice(false);
+        }
+      };
+      reader.readAsDataURL(audioBlob);
+    } catch (error) {
+      console.error('Error reading audio:', error);
+      setIsProcessingVoice(false);
+    }
+  };
 
   const handleStartInterview = () => {
     if (tempBasicInfo.name) {
@@ -392,37 +536,166 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
 
         {/* 输入区域 */}
         <div className="border-t border-border p-4">
-          <div className="flex gap-4">
-            <textarea
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendAnswer();
-                }
-              }}
-              placeholder="请输入老人的回答..."
-              className="flex-1 resize-none rounded-xl border border-input bg-background px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              rows={2}
-              disabled={isStreaming}
-            />
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={handleSendAnswer}
-                disabled={!userInput.trim() || isStreaming}
-                className="rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                发送
-              </button>
-              <button
-                onClick={handleNextQuestion}
-                className="rounded-xl border border-border bg-card px-6 py-3 font-medium text-foreground transition-all hover:bg-muted"
-              >
-                下一题
-              </button>
-            </div>
+          {/* 模式切换 */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <button
+              onClick={() => setInputMode('voice')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                inputMode === 'voice' 
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg' 
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Mic className="w-5 h-5" />
+              <span className="font-medium">语音输入</span>
+            </button>
+            <button
+              onClick={() => setInputMode('text')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                inputMode === 'text' 
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg' 
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Keyboard className="w-5 h-5" />
+              <span className="font-medium">文字输入</span>
+            </button>
           </div>
+
+          {inputMode === 'voice' ? (
+            /* 语音输入模式 */
+            <div className="flex flex-col items-center py-6">
+              {/* 大型语音按钮 */}
+              <div className="relative">
+                {/* 外圈动画 - 录音时 */}
+                {isRecording && (
+                  <>
+                    <div 
+                      className="absolute -inset-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 opacity-20 animate-ping"
+                    />
+                    <div 
+                      className="absolute -inset-4 rounded-full border-4 border-amber-400 transition-all duration-100"
+                      style={{ 
+                        transform: `scale(${1 + audioLevel * 0.2})`,
+                        opacity: 0.3 + audioLevel * 0.4
+                      }}
+                    />
+                  </>
+                )}
+                
+                {/* 主按钮 */}
+                <button
+                  onClick={isRecording ? stopRecording : startRecording}
+                  disabled={isProcessingVoice || isStreaming}
+                  className={`
+                    relative z-10
+                    w-28 h-28 rounded-full
+                    flex items-center justify-center
+                    shadow-2xl
+                    transition-all duration-300 ease-out
+                    ${isRecording 
+                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
+                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
+                    }
+                    ${isProcessingVoice ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                    active:scale-95
+                  `}
+                >
+                  {isProcessingVoice ? (
+                    <Loader2 className="w-12 h-12 text-white animate-spin" />
+                  ) : isRecording ? (
+                    <MicOff className="w-12 h-12 text-white" />
+                  ) : (
+                    <Mic className="w-12 h-12 text-white" />
+                  )}
+                </button>
+
+                {/* 录音指示灯 */}
+                {isRecording && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50" />
+                )}
+              </div>
+
+              {/* 提示文字 */}
+              <div className="mt-6 text-center">
+                {isProcessingVoice ? (
+                  <p className="text-lg font-medium text-amber-600">正在识别语音...</p>
+                ) : isRecording ? (
+                  <div className="text-center">
+                    <p className="text-lg font-medium text-red-600 animate-pulse">正在录音...</p>
+                    <p className="text-sm text-muted-foreground mt-1">点击按钮停止录音</p>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <p className="text-lg font-medium text-amber-700">点击按钮开始语音输入</p>
+                    <p className="text-sm text-muted-foreground mt-1">让老人直接说话，AI 会自动转成文字</p>
+                  </div>
+                )}
+              </div>
+
+              {/* 识别结果预览 */}
+              {userInput && (
+                <div className="mt-4 w-full max-w-md">
+                  <div className="rounded-xl bg-muted p-4">
+                    <p className="text-sm text-muted-foreground mb-2">识别结果：</p>
+                    <p className="text-foreground">{userInput}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* 发送按钮 */}
+              {userInput && (
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={handleSendAnswer}
+                    disabled={isStreaming}
+                    className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 text-lg font-medium text-white shadow-lg transition-all hover:shadow-xl disabled:opacity-50"
+                  >
+                    发送回答
+                  </button>
+                  <button
+                    onClick={() => setUserInput('')}
+                    className="rounded-xl border border-border bg-card px-6 py-3 font-medium text-foreground transition-all hover:bg-muted"
+                  >
+                    清除
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* 文字输入模式 */
+            <div className="flex gap-4">
+              <textarea
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendAnswer();
+                  }
+                }}
+                placeholder="请输入老人的回答..."
+                className="flex-1 resize-none rounded-xl border border-input bg-background px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                rows={2}
+                disabled={isStreaming}
+              />
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={handleSendAnswer}
+                  disabled={!userInput.trim() || isStreaming}
+                  className="rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  发送
+                </button>
+                <button
+                  onClick={handleNextQuestion}
+                  className="rounded-xl border border-border bg-card px-6 py-3 font-medium text-foreground transition-all hover:bg-muted"
+                >
+                  下一题
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
