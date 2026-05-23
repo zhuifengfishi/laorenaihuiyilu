@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Loader2, Keyboard } from 'lucide-react';
+import { Mic, MicOff, Loader2, Keyboard, User, Calendar, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import type { InterviewData } from '@/app/page';
 
 interface InterviewSectionProps {
@@ -87,18 +87,19 @@ const DIMENSIONS = [
 export function InterviewSection({ data, onDataChange }: InterviewSectionProps) {
   const [currentDimension, setCurrentDimension] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [isChatting, setIsChatting] = useState(false);
   const [userInput, setUserInput] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
-  const [showBasicInfo, setShowBasicInfo] = useState(!data.basicInfo.name);
-  const [tempBasicInfo, setTempBasicInfo] = useState(data.basicInfo);
+  const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice');
   
-  // Voice input states
+  // 基本信息相关
+  const [showBasicInfoBar, setShowBasicInfoBar] = useState(true);
+  const [basicInfo, setBasicInfo] = useState(data.basicInfo);
+  
+  // 语音输入相关
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessingVoice, setIsProcessingVoice] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
-  const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice'); // Default to voice mode
+  const [activeVoiceField, setActiveVoiceField] = useState<'name' | 'birthYear' | 'hometown' | 'chat' | null>(null);
   
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -107,6 +108,14 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
   const animationRef = useRef<number | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
+
+  // 初始化问候语
+  useEffect(() => {
+    if (messages.length === 0 && basicInfo.name) {
+      const greeting = `您好，${basicInfo.name}老人！我是您的记忆访谈助手。今天我们聊聊天，我来帮您记录下您的人生故事。我们从"童年乡土"开始，好吗？`;
+      setMessages([{ role: 'assistant', content: greeting }]);
+    }
+  }, [basicInfo.name]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -140,7 +149,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
   };
 
   // Start voice recording
-  const startRecording = async () => {
+  const startRecording = async (field?: 'name' | 'birthYear' | 'hometown' | 'chat') => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
@@ -151,6 +160,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
       });
       
       streamRef.current = stream;
+      if (field) setActiveVoiceField(field);
 
       const audioContext = new AudioContext();
       const source = audioContext.createMediaStreamSource(stream);
@@ -183,7 +193,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
           type: mediaRecorder.mimeType 
         });
         
-        await processVoiceAudio(audioBlob);
+        await processVoiceAudio(audioBlob, field);
       };
 
       mediaRecorder.start(100);
@@ -206,7 +216,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
   };
 
   // Process recorded audio
-  const processVoiceAudio = async (audioBlob: Blob) => {
+  const processVoiceAudio = async (audioBlob: Blob, field?: 'name' | 'birthYear' | 'hometown' | 'chat') => {
     setIsProcessingVoice(true);
     try {
       const reader = new FileReader();
@@ -227,33 +237,46 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
             throw new Error('语音识别失败');
           }
 
-          const data = await response.json();
+          const result = await response.json();
           
-          if (data.text) {
-            setUserInput(data.text);
+          if (result.text) {
+            if (field === 'name') {
+              setBasicInfo(prev => ({ ...prev, name: result.text.trim() }));
+            } else if (field === 'birthYear') {
+              setBasicInfo(prev => ({ ...prev, birthYear: result.text.trim() }));
+            } else if (field === 'hometown') {
+              setBasicInfo(prev => ({ ...prev, hometown: result.text.trim() }));
+            } else {
+              // 聊天输入
+              setUserInput(result.text);
+            }
           }
         } catch (error) {
           console.error('Error processing audio:', error);
           alert('语音识别失败，请重试');
         } finally {
           setIsProcessingVoice(false);
+          setActiveVoiceField(null);
         }
       };
       reader.readAsDataURL(audioBlob);
     } catch (error) {
       console.error('Error reading audio:', error);
       setIsProcessingVoice(false);
+      setActiveVoiceField(null);
     }
   };
 
-  const handleStartInterview = () => {
-    if (tempBasicInfo.name) {
-      onDataChange({ ...data, basicInfo: tempBasicInfo });
-      setShowBasicInfo(false);
-      setIsChatting(true);
-      
-      // 初始化问候语
-      const greeting = `您好，${tempBasicInfo.name}老人！我是您的记忆访谈助手。今天我们聊聊天，我来帮您记录下您的人生故事。我们从"童年乡土"开始，好吗？`;
+  // 更新基本信息
+  const handleBasicInfoChange = (field: 'name' | 'birthYear' | 'hometown', value: string) => {
+    setBasicInfo(prev => ({ ...prev, [field]: value }));
+  };
+
+  // 保存基本信息并开始访谈
+  const handleSaveBasicInfo = () => {
+    onDataChange({ ...data, basicInfo });
+    if (basicInfo.name && messages.length === 0) {
+      const greeting = `您好，${basicInfo.name}老人！我是您的记忆访谈助手。今天我们聊聊天，我来帮您记录下您的人生故事。我们从"童年乡土"开始，好吗？`;
       setMessages([{ role: 'assistant', content: greeting }]);
     }
   };
@@ -266,6 +289,11 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsStreaming(true);
 
+    // 保存基本信息
+    if (basicInfo.name) {
+      onDataChange({ ...data, basicInfo });
+    }
+
     // 保存对话记录
     const newConversation = {
       dimension: DIMENSIONS[currentDimension].name,
@@ -275,6 +303,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
     };
     onDataChange({
       ...data,
+      basicInfo,
       conversations: [...data.conversations, newConversation],
     });
 
@@ -286,7 +315,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
           messages: [
             {
               role: 'system',
-              content: `你是一位温暖、耐心的访谈助手，正在和一位${data.basicInfo.name || '老人'}老人聊天。
+              content: `你是一位温暖、耐心的访谈助手，正在和一位${basicInfo.name || '老人'}老人聊天。
 你的任务是：
 1. 用亲切、温暖的语气和老人交流
 2. 根据老人的回答，适时追问，引导老人说更多细节
@@ -368,297 +397,11 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
       // 访谈完成
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: `${data.basicInfo.name}老人，今天的访谈就到这里。感谢您分享这么多珍贵的故事和回忆！我会帮您整理成一份完整的回忆录。您可以前往"成果中心"查看和导出。` 
+        content: `${basicInfo.name}老人，今天的访谈就到这里。感谢您分享这么多珍贵的故事和回忆！我会帮您整理成一份完整的回忆录。您可以前往"成果中心"查看和导出。` 
       }]);
     }
   };
 
-  // 基本信息语音输入相关状态
-  const [activeVoiceField, setActiveVoiceField] = useState<'name' | 'birthYear' | 'hometown' | null>(null);
-  const [isRecordingBasicInfo, setIsRecordingBasicInfo] = useState(false);
-  const basicInfoAudioLevelRef = useRef(0);
-  const basicInfoMediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const basicInfoAudioChunksRef = useRef<Blob[]>([]);
-  const basicInfoStreamRef = useRef<MediaStream | null>(null);
-
-  // 基本信息语音录制
-  const startBasicInfoRecording = async (field: 'name' | 'birthYear' | 'hometown') => {
-    try {
-      setActiveVoiceField(field);
-      setIsRecordingBasicInfo(true);
-      basicInfoAudioChunksRef.current = [];
-
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          sampleRate: 16000,
-        },
-      });
-      basicInfoStreamRef.current = stream;
-
-      // 音频电平分析
-      const audioContext = new AudioContext();
-      const analyser = audioContext.createAnalyser();
-      const source = audioContext.createMediaStreamSource(stream);
-      source.connect(analyser);
-      analyser.fftSize = 256;
-
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-      
-      const updateLevel = () => {
-        if (!isRecordingBasicInfo) return;
-        analyser.getByteFrequencyData(dataArray);
-        const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-        basicInfoAudioLevelRef.current = average / 255;
-        
-        // 强制更新组件
-        setAudioLevel(basicInfoAudioLevelRef.current);
-        requestAnimationFrame(updateLevel);
-      };
-      updateLevel();
-
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4',
-      });
-      basicInfoMediaRecorderRef.current = mediaRecorder;
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          basicInfoAudioChunksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        setIsRecordingBasicInfo(false);
-        setActiveVoiceField(null);
-        
-        // 停止所有音轨
-        stream.getTracks().forEach(track => track.stop());
-        
-        // 处理录音
-        const audioBlob = new Blob(basicInfoAudioChunksRef.current, {
-          type: mediaRecorder.mimeType,
-        });
-
-        // 调用 ASR API
-        const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.webm');
-
-        try {
-          const response = await fetch('/api/asr', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (response.ok) {
-            const result = await response.json();
-            if (result.text) {
-              // 根据当前字段填充
-              setTempBasicInfo(prev => ({
-                ...prev,
-                [field]: result.text.trim(),
-              }));
-            }
-          }
-        } catch (error) {
-          console.error('语音识别失败:', error);
-        }
-      };
-
-      mediaRecorder.start();
-    } catch (error) {
-      console.error('无法访问麦克风:', error);
-      setIsRecordingBasicInfo(false);
-      setActiveVoiceField(null);
-    }
-  };
-
-  const stopBasicInfoRecording = () => {
-    if (basicInfoMediaRecorderRef.current && isRecordingBasicInfo) {
-      basicInfoMediaRecorderRef.current.stop();
-    }
-  };
-
-  // 基本信息填写界面
-  if (showBasicInfo) {
-    return (
-      <div className="mx-auto max-w-2xl py-12">
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-          <div className="mb-8 text-center">
-            <div className="mb-4 text-4xl">👤</div>
-            <h2 className="font-serif text-2xl font-bold text-foreground">填写基本信息</h2>
-            <p className="mt-2 text-muted-foreground">点击语音按钮，说出信息即可自动填写</p>
-          </div>
-          
-          <div className="space-y-8">
-            {/* 姓名输入 */}
-            <div>
-              <label className="mb-3 block text-sm font-medium text-foreground">
-                老人姓名 <span className="text-destructive">*</span>
-              </label>
-              <div className="flex items-center gap-4">
-                {/* 语音按钮 */}
-                <button
-                  type="button"
-                  onClick={() => isRecordingBasicInfo && activeVoiceField === 'name' 
-                    ? stopBasicInfoRecording() 
-                    : startBasicInfoRecording('name')}
-                  disabled={isRecordingBasicInfo && activeVoiceField !== 'name'}
-                  className={`
-                    relative flex-shrink-0
-                    w-20 h-20 rounded-full
-                    flex items-center justify-center
-                    shadow-xl
-                    transition-all duration-300 ease-out
-                    ${isRecordingBasicInfo && activeVoiceField === 'name'
-                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
-                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
-                    }
-                    ${isRecordingBasicInfo && activeVoiceField !== 'name' ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
-                >
-                  {isRecordingBasicInfo && activeVoiceField === 'name' && (
-                    <>
-                      <div className="absolute -inset-3 rounded-full bg-red-400 opacity-20 animate-ping" />
-                      <div 
-                        className="absolute -inset-2 rounded-full border-4 border-red-300"
-                        style={{ 
-                          transform: `scale(${1 + audioLevel * 0.3})`,
-                          opacity: 0.3 + audioLevel * 0.5
-                        }}
-                      />
-                    </>
-                  )}
-                  <Mic className={`w-8 h-8 text-white ${isRecordingBasicInfo && activeVoiceField === 'name' ? 'animate-pulse' : ''}`} />
-                </button>
-                {/* 文字输入 */}
-                <input
-                  type="text"
-                  value={tempBasicInfo.name}
-                  onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, name: e.target.value })}
-                  className="flex-1 rounded-lg border border-input bg-background px-4 py-4 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  placeholder={isRecordingBasicInfo && activeVoiceField === 'name' ? '正在听...' : '点击左侧按钮说话，或直接输入'}
-                />
-              </div>
-            </div>
-            
-            {/* 出生年份输入 */}
-            <div>
-              <label className="mb-3 block text-sm font-medium text-foreground">
-                出生年份
-              </label>
-              <div className="flex items-center gap-4">
-                {/* 语音按钮 */}
-                <button
-                  type="button"
-                  onClick={() => isRecordingBasicInfo && activeVoiceField === 'birthYear' 
-                    ? stopBasicInfoRecording() 
-                    : startBasicInfoRecording('birthYear')}
-                  disabled={isRecordingBasicInfo && activeVoiceField !== 'birthYear'}
-                  className={`
-                    relative flex-shrink-0
-                    w-20 h-20 rounded-full
-                    flex items-center justify-center
-                    shadow-xl
-                    transition-all duration-300 ease-out
-                    ${isRecordingBasicInfo && activeVoiceField === 'birthYear'
-                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
-                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
-                    }
-                    ${isRecordingBasicInfo && activeVoiceField !== 'birthYear' ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
-                >
-                  {isRecordingBasicInfo && activeVoiceField === 'birthYear' && (
-                    <>
-                      <div className="absolute -inset-3 rounded-full bg-red-400 opacity-20 animate-ping" />
-                      <div 
-                        className="absolute -inset-2 rounded-full border-4 border-red-300"
-                        style={{ 
-                          transform: `scale(${1 + audioLevel * 0.3})`,
-                          opacity: 0.3 + audioLevel * 0.5
-                        }}
-                      />
-                    </>
-                  )}
-                  <Mic className={`w-8 h-8 text-white ${isRecordingBasicInfo && activeVoiceField === 'birthYear' ? 'animate-pulse' : ''}`} />
-                </button>
-                {/* 文字输入 */}
-                <input
-                  type="text"
-                  value={tempBasicInfo.birthYear}
-                  onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, birthYear: e.target.value })}
-                  className="flex-1 rounded-lg border border-input bg-background px-4 py-4 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  placeholder={isRecordingBasicInfo && activeVoiceField === 'birthYear' ? '正在听...' : '点击左侧按钮说话，或直接输入'}
-                />
-              </div>
-            </div>
-            
-            {/* 家乡输入 */}
-            <div>
-              <label className="mb-3 block text-sm font-medium text-foreground">
-                家乡
-              </label>
-              <div className="flex items-center gap-4">
-                {/* 语音按钮 */}
-                <button
-                  type="button"
-                  onClick={() => isRecordingBasicInfo && activeVoiceField === 'hometown' 
-                    ? stopBasicInfoRecording() 
-                    : startBasicInfoRecording('hometown')}
-                  disabled={isRecordingBasicInfo && activeVoiceField !== 'hometown'}
-                  className={`
-                    relative flex-shrink-0
-                    w-20 h-20 rounded-full
-                    flex items-center justify-center
-                    shadow-xl
-                    transition-all duration-300 ease-out
-                    ${isRecordingBasicInfo && activeVoiceField === 'hometown'
-                      ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
-                      : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
-                    }
-                    ${isRecordingBasicInfo && activeVoiceField !== 'hometown' ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
-                >
-                  {isRecordingBasicInfo && activeVoiceField === 'hometown' && (
-                    <>
-                      <div className="absolute -inset-3 rounded-full bg-red-400 opacity-20 animate-ping" />
-                      <div 
-                        className="absolute -inset-2 rounded-full border-4 border-red-300"
-                        style={{ 
-                          transform: `scale(${1 + audioLevel * 0.3})`,
-                          opacity: 0.3 + audioLevel * 0.5
-                        }}
-                      />
-                    </>
-                  )}
-                  <Mic className={`w-8 h-8 text-white ${isRecordingBasicInfo && activeVoiceField === 'hometown' ? 'animate-pulse' : ''}`} />
-                </button>
-                {/* 文字输入 */}
-                <input
-                  type="text"
-                  value={tempBasicInfo.hometown}
-                  onChange={(e) => setTempBasicInfo({ ...tempBasicInfo, hometown: e.target.value })}
-                  className="flex-1 rounded-lg border border-input bg-background px-4 py-4 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  placeholder={isRecordingBasicInfo && activeVoiceField === 'hometown' ? '正在听...' : '点击左侧按钮说话，或直接输入'}
-                />
-              </div>
-            </div>
-            
-            <button
-              onClick={handleStartInterview}
-              disabled={!tempBasicInfo.name}
-              className="w-full rounded-lg bg-primary py-4 text-lg font-medium text-primary-foreground shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              开始访谈
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 访谈进行中界面
   return (
     <div className="flex h-[calc(100vh-4rem)] gap-6 py-6">
       {/* 左侧：维度导航 */}
@@ -701,6 +444,134 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
 
       {/* 中间：对话区域 */}
       <div className="flex flex-1 flex-col rounded-2xl border border-border bg-card">
+        {/* 基本信息栏 - 可折叠 */}
+        <div className="border-b border-border">
+          <button
+            onClick={() => setShowBasicInfoBar(!showBasicInfoBar)}
+            className="flex w-full items-center justify-between p-3 hover:bg-muted/50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <User className="w-5 h-5 text-primary" />
+              <span className="font-medium text-foreground">
+                {basicInfo.name || '点击填写基本信息'}
+              </span>
+              {basicInfo.birthYear && (
+                <span className="text-sm text-muted-foreground">· {basicInfo.birthYear}年</span>
+              )}
+              {basicInfo.hometown && (
+                <span className="text-sm text-muted-foreground">· {basicInfo.hometown}</span>
+              )}
+            </div>
+            {showBasicInfoBar ? (
+              <ChevronUp className="w-5 h-5 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-muted-foreground" />
+            )}
+          </button>
+          
+          {showBasicInfoBar && (
+            <div className="border-t border-border bg-muted/30 p-4">
+              <div className="grid grid-cols-3 gap-4">
+                {/* 姓名输入 */}
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex-1 flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={basicInfo.name}
+                      onChange={(e) => handleBasicInfoChange('name', e.target.value)}
+                      placeholder="姓名"
+                      className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    />
+                    <button
+                      onClick={() => isRecording && activeVoiceField === 'name' ? stopRecording() : startRecording('name')}
+                      disabled={isRecording && activeVoiceField !== 'name'}
+                      className={`
+                        relative w-10 h-10 rounded-full flex items-center justify-center
+                        transition-all duration-300 flex-shrink-0
+                        ${isRecording && activeVoiceField === 'name'
+                          ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110'
+                          : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105'
+                        }
+                        ${isRecording && activeVoiceField !== 'name' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                      `}
+                    >
+                      {isRecording && activeVoiceField === 'name' && (
+                        <div className="absolute -inset-1 rounded-full bg-red-400 opacity-20 animate-ping" />
+                      )}
+                      <Mic className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 出生年份输入 */}
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex-1 flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={basicInfo.birthYear}
+                      onChange={(e) => handleBasicInfoChange('birthYear', e.target.value)}
+                      placeholder="出生年份"
+                      className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    />
+                    <button
+                      onClick={() => isRecording && activeVoiceField === 'birthYear' ? stopRecording() : startRecording('birthYear')}
+                      disabled={isRecording && activeVoiceField !== 'birthYear'}
+                      className={`
+                        relative w-10 h-10 rounded-full flex items-center justify-center
+                        transition-all duration-300 flex-shrink-0
+                        ${isRecording && activeVoiceField === 'birthYear'
+                          ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110'
+                          : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105'
+                        }
+                        ${isRecording && activeVoiceField !== 'birthYear' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                      `}
+                    >
+                      {isRecording && activeVoiceField === 'birthYear' && (
+                        <div className="absolute -inset-1 rounded-full bg-red-400 opacity-20 animate-ping" />
+                      )}
+                      <Mic className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 家乡输入 */}
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex-1 flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={basicInfo.hometown}
+                      onChange={(e) => handleBasicInfoChange('hometown', e.target.value)}
+                      placeholder="家乡"
+                      className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    />
+                    <button
+                      onClick={() => isRecording && activeVoiceField === 'hometown' ? stopRecording() : startRecording('hometown')}
+                      disabled={isRecording && activeVoiceField !== 'hometown'}
+                      className={`
+                        relative w-10 h-10 rounded-full flex items-center justify-center
+                        transition-all duration-300 flex-shrink-0
+                        ${isRecording && activeVoiceField === 'hometown'
+                          ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110'
+                          : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105'
+                        }
+                        ${isRecording && activeVoiceField !== 'hometown' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                      `}
+                    >
+                      {isRecording && activeVoiceField === 'hometown' && (
+                        <div className="absolute -inset-1 rounded-full bg-red-400 opacity-20 animate-ping" />
+                      )}
+                      <Mic className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* 当前问题提示 */}
         <div className="border-b border-border p-4">
           <div className="flex items-center justify-between">
@@ -726,32 +597,42 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
           ref={chatContainerRef}
           className="flex-1 overflow-y-auto p-4 space-y-4"
         >
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                  msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-foreground'
-                }`}
-              >
-                {msg.content}
-              </div>
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <div className="text-6xl mb-4">👵👴</div>
+              <p className="text-lg font-medium text-foreground">请先填写上方的基本信息</p>
+              <p className="text-sm text-muted-foreground mt-2">填写姓名后即可开始访谈</p>
             </div>
-          ))}
-          {isStreaming && (
-            <div className="flex justify-start">
-              <div className="rounded-2xl bg-muted px-4 py-3">
-                <span className="inline-flex items-center gap-1">
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:0ms]"></span>
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:150ms]"></span>
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:300ms]"></span>
-                </span>
-              </div>
-            </div>
+          ) : (
+            <>
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                      msg.role === 'user'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-foreground'
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              {isStreaming && (
+                <div className="flex justify-start">
+                  <div className="rounded-2xl bg-muted px-4 py-3">
+                    <span className="inline-flex items-center gap-1">
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:0ms]"></span>
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:150ms]"></span>
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:300ms]"></span>
+                    </span>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -789,7 +670,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
               {/* 大型语音按钮 */}
               <div className="relative">
                 {/* 外圈动画 - 录音时 */}
-                {isRecording && (
+                {isRecording && activeVoiceField === 'chat' && (
                   <>
                     <div 
                       className="absolute -inset-6 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 opacity-20 animate-ping"
@@ -806,25 +687,31 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                 
                 {/* 主按钮 */}
                 <button
-                  onClick={isRecording ? stopRecording : startRecording}
-                  disabled={isProcessingVoice || isStreaming}
+                  onClick={() => {
+                    if (isRecording && activeVoiceField === 'chat') {
+                      stopRecording();
+                    } else {
+                      startRecording('chat');
+                    }
+                  }}
+                  disabled={isProcessingVoice || isStreaming || isRecording && activeVoiceField !== 'chat' && activeVoiceField !== null}
                   className={`
                     relative z-10
                     w-28 h-28 rounded-full
                     flex items-center justify-center
                     shadow-2xl
                     transition-all duration-300 ease-out
-                    ${isRecording 
+                    ${isRecording && activeVoiceField === 'chat'
                       ? 'bg-gradient-to-br from-red-500 to-red-600 scale-110' 
                       : 'bg-gradient-to-br from-amber-500 to-orange-500 hover:scale-105 hover:shadow-amber-500/50'
                     }
-                    ${isProcessingVoice ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                    ${isProcessingVoice || (isRecording && activeVoiceField !== 'chat' && activeVoiceField !== null) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                     active:scale-95
                   `}
                 >
                   {isProcessingVoice ? (
                     <Loader2 className="w-12 h-12 text-white animate-spin" />
-                  ) : isRecording ? (
+                  ) : isRecording && activeVoiceField === 'chat' ? (
                     <MicOff className="w-12 h-12 text-white" />
                   ) : (
                     <Mic className="w-12 h-12 text-white" />
@@ -832,7 +719,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                 </button>
 
                 {/* 录音指示灯 */}
-                {isRecording && (
+                {isRecording && activeVoiceField === 'chat' && (
                   <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50" />
                 )}
               </div>
@@ -841,7 +728,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
               <div className="mt-6 text-center">
                 {isProcessingVoice ? (
                   <p className="text-lg font-medium text-amber-600">正在识别语音...</p>
-                ) : isRecording ? (
+                ) : isRecording && activeVoiceField === 'chat' ? (
                   <div className="text-center">
                     <p className="text-lg font-medium text-red-600 animate-pulse">正在录音...</p>
                     <p className="text-sm text-muted-foreground mt-1">点击按钮停止录音</p>
@@ -898,62 +785,24 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                 placeholder="请输入老人的回答..."
                 className="flex-1 resize-none rounded-xl border border-input bg-background px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 rows={2}
-                disabled={isStreaming}
               />
               <div className="flex flex-col gap-2">
                 <button
                   onClick={handleSendAnswer}
                   disabled={!userInput.trim() || isStreaming}
-                  className="rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 font-medium text-white shadow-lg transition-all hover:shadow-xl disabled:opacity-50"
                 >
                   发送
                 </button>
                 <button
                   onClick={handleNextQuestion}
-                  className="rounded-xl border border-border bg-card px-6 py-3 font-medium text-foreground transition-all hover:bg-muted"
+                  className="rounded-xl border border-border bg-card px-4 py-2 text-sm text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
                 >
-                  下一题
+                  下一题 →
                 </button>
               </div>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* 右侧：提示词 */}
-      <div className="w-72 flex-shrink-0">
-        <div className="sticky top-6 rounded-2xl border border-border bg-card p-4">
-          <h3 className="mb-4 font-semibold text-foreground">引导提示</h3>
-          <div className="space-y-3">
-            <div className="rounded-lg bg-primary/5 p-3">
-              <div className="text-sm font-medium text-foreground">当前维度</div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                {DIMENSIONS[currentDimension].description}
-              </div>
-            </div>
-            
-            <div className="rounded-lg bg-muted p-3">
-              <div className="text-sm font-medium text-foreground">可引导的话题</div>
-              <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                {DIMENSIONS[currentDimension].questions.slice(currentQuestion, currentQuestion + 3).map((q, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-                    <span>{q}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="rounded-lg bg-accent/5 p-3">
-              <div className="text-sm font-medium text-foreground">访谈技巧</div>
-              <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                <li>• 用温柔的语气引导老人</li>
-                <li>• 给老人充分的思考时间</li>
-                <li>• 适时追问细节</li>
-                <li>• 表达对老人经历的尊重</li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
