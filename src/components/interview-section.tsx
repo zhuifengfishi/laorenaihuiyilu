@@ -14,72 +14,168 @@ const DIMENSIONS = [
     id: 'childhood',
     name: '童年乡土',
     icon: '👶',
+    color: 'bg-amber-100',
     description: '儿时的村庄、玩伴、趣事',
     questions: [
-      '您还记得小时候住的房子是什么样子的吗？',
-      '童年时有没有特别要好的小伙伴？你们平时一起玩什么？',
-      '小时候最喜欢吃什么？有没有什么难忘的味道？',
-      '还记得小时候最快乐的一件事是什么吗？',
+      '您还记得小时候住的房子是什么样子的吗？院子里有什么特别的？',
+      '童年时有没有特别要好的小伙伴？你们平时一起玩什么游戏？',
+      '小时候最喜欢吃什么？有没有什么难忘的味道至今还记得？',
+      '还记得小时候最快乐的一天是什么时候？发生了什么事？',
+      '小时候有没有挨过父母的打骂？是因为什么事？',
     ],
   },
   {
     id: 'farming',
     name: '农耕生活',
     icon: '🌾',
+    color: 'bg-green-100',
     description: '田间的劳作、农活的记忆',
     questions: [
-      '您从多大开始帮家里干农活？当时都做些什么？',
-      '一年四季里，哪个季节最忙？都有什么农活要干？',
-      '还记得以前种过哪些庄稼吗？收成怎么样？',
-      '有没有什么农耕的智慧或经验想传给后辈？',
+      '您从多大开始帮家里干农活？第一次下地是什么感觉？',
+      '一年四季里，哪个季节最忙？您最擅长做什么农活？',
+      '还记得以前种过哪些庄稼吗？哪一年收成最好？',
+      '以前没有机器的时候，都是怎么干活的？有没有什么老农具？',
+      '有没有什么农耕的智慧或经验想传给后辈的？',
     ],
   },
   {
     id: 'times',
     name: '时代变迁',
     icon: '📜',
+    color: 'bg-stone-100',
     description: '亲历的大事、社会的变化',
     questions: [
-      '您印象最深的时代变化是什么？',
-      '以前的生活和现在有什么不一样？',
+      '您这辈子经历过哪些让您印象最深刻的大事？',
+      '以前的生活和现在比，您觉得变化最大的是什么？',
       '有没有经历过什么特别艰难的时期？是怎么熬过来的？',
-      '现在的生活和以前比，您觉得最大的变化是什么？',
+      '您觉得现在的生活和年轻时候比，是更好了还是更难了？',
+      '如果能让年轻人了解那个年代，您最想告诉他们什么？',
     ],
   },
   {
     id: 'marriage',
     name: '婚恋家庭',
     icon: '❤️',
+    color: 'bg-rose-100',
     description: '成家立业、抚养子女',
     questions: [
-      '您是怎么认识老伴的？当时是怎么走到一起的？',
+      '您是怎么认识老伴的？当时是谁先开口的？',
       '结婚那时候是什么样子的？有没有什么特别的习俗？',
-      '养育子女的过程中，有什么难忘的事吗？',
-      '对子女，您有什么话想对他们说？',
+      '养育子女的过程中，最辛苦的是什么？最欣慰的又是什么？',
+      '孩子们小时候有没有做过什么让您特别感动或生气的事？',
+      '如果可以重来，您对家庭生活有什么想改变的吗？',
+    ],
+  },
+  {
+    id: 'memorable',
+    name: '最难忘时刻',
+    icon: '⭐',
+    color: 'bg-yellow-100',
+    description: '人生中最难忘的事情',
+    questions: [
+      '您这辈子最难忘的一天是哪一天？发生了什么事？',
+      '有没有什么事情，让您到现在想起来还会流泪？',
+      '您最幸福的一刻是什么时候？当时是什么感受？',
+      '有没有什么时刻，让您觉得这辈子值了？',
+      '如果要选一件事代表您的一生，您会选哪件？',
+    ],
+  },
+  {
+    id: 'gratitude',
+    name: '最想感谢的人',
+    icon: '🙏',
+    color: 'bg-blue-100',
+    description: '恩人、贵人、想感谢的人',
+    questions: [
+      '您这辈子最想感谢的人是谁？他为您做过什么？',
+      '有没有人在您最困难的时候帮助过您？那是怎样的情况？',
+      '有没有什么话，您一直想对某个人说却没机会说？',
+      '有没有什么人，您觉得这辈子亏欠了他？',
+      '如果能让您再见一个人一面，您最想见谁？想对他说什么？',
+    ],
+  },
+  {
+    id: 'turning',
+    name: '人生转折点',
+    icon: '🔀',
+    color: 'bg-purple-100',
+    description: '重大选择、命运转折',
+    questions: [
+      '您人生中最重要的转折点是什么？当时是怎么做决定的？',
+      '有没有做过什么决定，改变了您的一生？',
+      '有没有什么机会，您后悔没有抓住的？',
+      '如果人生能重来，您会在哪个路口做出不同的选择？',
+      '您觉得命运是注定的，还是自己争取的？',
+    ],
+  },
+  {
+    id: 'proud',
+    name: '最骄傲的事',
+    icon: '🏆',
+    color: 'bg-orange-100',
+    description: '一生中最自豪的成就',
+    questions: [
+      '您这辈子最骄傲的事情是什么？为什么让您这么自豪？',
+      '有没有什么事情，是您觉得自己做得特别好的？',
+      '您觉得自己最大的优点是什么？',
+      '后辈们有没有做过什么让您特别骄傲的事？',
+      '如果要给年轻时的自己打分，您打几分？为什么？',
+    ],
+  },
+  {
+    id: 'regret',
+    name: '遗憾与心结',
+    icon: '🌙',
+    color: 'bg-slate-100',
+    description: '未了的心愿、放不下的事',
+    questions: [
+      '您这辈子有没有什么遗憾的事？',
+      '有没有什么人，您想对他道歉或道谢的？',
+      '有什么事情是您一直想做却没做的？',
+      '有没有什么心结，到现在还没解开？',
+      '如果时间能倒流，您最想改变什么？',
     ],
   },
   {
     id: 'wisdom',
     name: '人生感悟',
     icon: '💡',
-    description: '一生的智慧、对后辈的话',
+    color: 'bg-teal-100',
+    description: '一生的智慧、人生道理',
     questions: [
-      '回首一生，您觉得最骄傲的事情是什么？',
-      '有没有什么遗憾，或者想重新来过的事？',
-      '您觉得做人最重要的道理是什么？',
-      '对后辈们，您有什么人生经验想分享？',
+      '活了一辈子，您觉得做人最重要的道理是什么？',
+      '您觉得什么是真正的幸福？',
+      '有没有什么老话、俗语，您觉得特别有道理？',
+      '对现在的年轻人，您有什么想提醒他们的吗？',
+      '如果用一句话总结您的一生，您会说什么？',
+    ],
+  },
+  {
+    id: 'message',
+    name: '对后辈的话',
+    icon: '💌',
+    color: 'bg-pink-100',
+    description: '对子孙后代的嘱托',
+    questions: [
+      '您最想对孩子们说什么？有什么话一直想告诉他们？',
+      '您希望后辈们记住家族的什么传统或美德？',
+      '有什么人生经验，您觉得一定要传给下一代？',
+      '您对孙子孙女有什么期望和祝福？',
+      '如果有一天您不在了，您希望后辈们怎么记住您？',
     ],
   },
   {
     id: 'customs',
     name: '乡土民俗',
     icon: '🏠',
+    color: 'bg-emerald-100',
     description: '老家的风俗、传统的记忆',
     questions: [
-      '老家有什么特别的节日习俗吗？',
-      '过年过节的时候，家里都会准备些什么？',
-      '村里有没有什么老手艺、老传统？',
-      '有没有什么方言或老话，想教给后辈？',
+      '老家有什么特别的节日习俗吗？过年过节都怎么过？',
+      '婚丧嫁娶在以前都有什么规矩？',
+      '村里有没有什么老手艺、老传统？现在还有人会吗？',
+      '有没有什么方言或老话，您想教给后辈？',
+      '关于咱们村的历史，您知道哪些老故事？',
     ],
   },
 ];
@@ -408,7 +504,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
       <div className="w-64 flex-shrink-0">
         <div className="sticky top-6 rounded-2xl border border-border bg-card p-4">
           <h3 className="mb-4 font-semibold text-foreground">访谈维度</h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5 max-h-[calc(100vh-16rem)] overflow-y-auto pr-1">
             {DIMENSIONS.map((dim, index) => (
               <button
                 key={dim.id}
@@ -416,16 +512,16 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                   setCurrentDimension(index);
                   setCurrentQuestion(0);
                 }}
-                className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-all ${
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all ${
                   currentDimension === index
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : `${dim.color || 'hover:bg-muted'} text-muted-foreground hover:text-foreground`
                 }`}
               >
                 <span className="text-xl">{dim.icon}</span>
-                <div>
-                  <div className="font-medium">{dim.name}</div>
-                  <div className="text-xs opacity-80">{dim.description}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-sm">{dim.name}</div>
+                  <div className="text-xs opacity-70 truncate">{dim.description}</div>
                 </div>
               </button>
             ))}
