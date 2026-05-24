@@ -277,7 +277,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
 
       {/* 所有成果展示 - 直接平铺 */}
       <div className="mb-8">
-        <h3 className="mb-4 text-lg font-semibold text-foreground">选择要生成的成果</h3>
+        <h3 className="mb-4 text-xl font-bold text-foreground">选择要生成的成果</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {allOutputs.map((output) => (
             <button
@@ -290,20 +290,20 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
               }`}
             >
               {/* 分类标签 */}
-              <span className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-xs ${output.categoryColor}`}>
+              <span className={`absolute right-2 top-2 rounded-full px-3 py-1 text-sm font-medium ${output.categoryColor}`}>
                 {output.category}
               </span>
               
               {/* 热门/新标签 */}
               {output.badge && (
-                <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                <span className="absolute left-2 top-2 rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
                   {output.badge}
                 </span>
               )}
               
-              <div className="mt-6 mb-2 text-3xl">{output.icon}</div>
-              <h3 className="mb-1 text-sm font-semibold text-foreground">{output.label}</h3>
-              <p className="line-clamp-2 text-xs text-muted-foreground">{output.description}</p>
+              <div className="mt-6 mb-3 text-4xl">{output.icon}</div>
+              <h3 className="mb-2 text-lg font-bold text-foreground">{output.label}</h3>
+              <p className="line-clamp-2 text-sm text-muted-foreground leading-relaxed">{output.description}</p>
             </button>
           ))}
         </div>
@@ -313,17 +313,17 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
       <div className="rounded-2xl border border-border bg-card p-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-foreground">
+            <h2 className="text-2xl font-bold text-foreground">
               {getOutputInfo(activeOutput)?.icon} {getOutputInfo(activeOutput)?.label}
             </h2>
-            <p className="mt-1 text-muted-foreground">
+            <p className="mt-2 text-base text-muted-foreground">
               {getOutputInfo(activeOutput)?.description}
             </p>
           </div>
           <button
             onClick={() => handleGenerate(activeOutput)}
             disabled={isGenerating || interviewData.conversations.length === 0}
-            className="rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 font-medium text-primary-foreground shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-gradient-to-r from-primary to-accent px-8 py-4 text-lg font-bold text-primary-foreground shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isGenerating ? (
               <span className="flex items-center gap-2">
@@ -339,9 +339,9 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         {/* 进度条 */}
         {isGenerating && (
           <div className="mb-6">
-            <div className="mb-2 flex justify-between text-sm">
+            <div className="mb-2 flex justify-between text-base">
               <span className="text-muted-foreground">正在生成...</span>
-              <span className="font-medium text-primary">{progress}%</span>
+              <span className="font-bold text-primary">{progress}%</span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-muted">
               <div
@@ -356,9 +356,9 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         {generatedContent ? (
           <div>
             <div className="rounded-xl bg-muted p-6">
-              <div className="prose prose-sm max-w-none">
+              <div className="prose prose-lg max-w-none">
                 {generatedContent.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="mb-4 text-foreground leading-relaxed">
+                  <p key={index} className="mb-4 text-lg text-foreground leading-relaxed">
                     {paragraph}
                   </p>
                 ))}
@@ -369,14 +369,14 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
             <div className="mt-6 flex gap-4">
               <button
                 onClick={() => handleDownload('pdf')}
-                className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                className="flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
               >
                 <span>📄</span>
                 <span>下载电子版</span>
               </button>
               <button
                 onClick={handlePrint}
-                className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                className="flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
               >
                 <span>🖨️</span>
                 <span>打印输出</span>
@@ -386,7 +386,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
                   navigator.clipboard.writeText(generatedContent);
                   alert('已复制到剪贴板');
                 }}
-                className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                className="flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted"
               >
                 <span>📋</span>
                 <span>复制内容</span>
