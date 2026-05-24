@@ -280,7 +280,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
             <div key={stat.label} className="rounded-xl bg-card p-4 text-center shadow-sm">
               <div className="text-2xl">{stat.icon}</div>
               <div className="mt-2 text-2xl font-bold text-primary">{stat.value}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
+              <div className="text-base text-muted-foreground">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -308,13 +308,13 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
                 {/* 分类标签 */}
-                <span className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-xs font-medium ${output.categoryColor}`}>
+                <span className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-sm font-medium ${output.categoryColor}`}>
                   {output.category}
                 </span>
                 
                 {/* 热门/新标签 */}
                 {output.badge && (
-                  <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
+                  <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-sm font-medium text-primary-foreground">
                     {output.badge}
                   </span>
                 )}
@@ -326,7 +326,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
                   <span className="text-2xl">{output.icon}</span>
                   <h3 className="text-base font-bold text-foreground">{output.label}</h3>
                 </div>
-                <p className="line-clamp-2 text-xs text-muted-foreground leading-relaxed">{output.description}</p>
+                <p className="line-clamp-2 text-base text-muted-foreground leading-relaxed">{output.description}</p>
               </div>
             </button>
           ))}
@@ -434,7 +434,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
         <div className="mt-8 grid grid-cols-3 gap-4">
           {getOutputInfo(activeOutput)?.features.map((feature, index) => (
             <div key={index} className="rounded-lg bg-muted p-4 text-center">
-              <span className="text-sm text-muted-foreground">{feature}</span>
+              <span className="text-base text-muted-foreground">{feature}</span>
             </div>
           ))}
         </div>
@@ -447,7 +447,7 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
             <span className="text-2xl">💡</span>
             <div>
               <p className="font-medium text-foreground">还没有访谈记录</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-base text-muted-foreground">
                 请先前往"智能访谈"模块，引导老人讲述人生故事，收集素材后再生成成果
               </p>
             </div>
@@ -464,30 +464,30 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
               <span className="text-2xl">📦</span>
               <h4 className="font-semibold text-foreground">基础套装</h4>
             </div>
-            <p className="mb-3 text-sm text-muted-foreground">家庭珍藏必备</p>
+            <p className="mb-3 text-base text-muted-foreground">家庭珍藏必备</p>
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">回忆录</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家书</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家谱</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">回忆录</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家书</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家谱</span>
             </div>
           </div>
 
           <div className="relative rounded-2xl border-2 border-primary bg-gradient-to-br from-primary/5 to-accent/5 p-6 shadow-lg">
-            <span className="absolute -top-3 left-4 rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground">
+            <span className="absolute -top-3 left-4 rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground">
               🔥 推荐
             </span>
             <div className="mb-3 flex items-center gap-2">
               <span className="text-2xl">💝</span>
               <h4 className="font-semibold text-foreground">珍藏套装</h4>
             </div>
-            <p className="mb-3 text-sm text-muted-foreground">代代相传之宝</p>
+            <p className="mb-3 text-base text-muted-foreground">代代相传之宝</p>
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">回忆录</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家书</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家谱</span>
-              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">时间轴</span>
-              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">金句海报</span>
-              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-700">原声</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">回忆录</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家书</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家谱</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-700">时间轴</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-700">金句海报</span>
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">原声</span>
             </div>
           </div>
 
@@ -496,17 +496,17 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
               <span className="text-2xl">👑</span>
               <h4 className="font-semibold text-foreground">传家套装</h4>
             </div>
-            <p className="mb-3 text-sm text-muted-foreground">顶级珍藏全套</p>
+            <p className="mb-3 text-base text-muted-foreground">顶级珍藏全套</p>
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">回忆录</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家书</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家谱</span>
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700">家训</span>
-              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">时间轴</span>
-              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">家族树</span>
-              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs text-purple-700">金句海报</span>
-              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs text-blue-700">原声</span>
-              <span className="rounded-full bg-red-100 px-3 py-1 text-xs text-red-700">数字人</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">回忆录</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家书</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家谱</span>
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-700">家训</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-700">时间轴</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-700">家族树</span>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-700">金句海报</span>
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">原声</span>
+              <span className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">数字人</span>
             </div>
           </div>
         </div>

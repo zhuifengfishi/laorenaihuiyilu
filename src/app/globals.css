@@ -133,13 +133,42 @@
   }
 }
 
-body {
-  @apply font-sans;
+/* 适老化设计：全局增大字体 */
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
 }
 
-/* 平滑滚动 */
-html {
-  scroll-behavior: smooth;
+body {
+  @apply font-sans;
+  line-height: 1.8;
+}
+
+/* 标题更大更醒目 */
+h1 { font-size: 2.5rem !important; }
+h2 { font-size: 2rem !important; }
+h3 { font-size: 1.5rem !important; }
+h4 { font-size: 1.25rem !important; }
+
+/* 按钮文字更大 */
+button, .btn {
+  font-size: 1.125rem !important;
+}
+
+/* 输入框文字更大 */
+input, textarea, select {
+  font-size: 1.125rem !important;
+}
+
+/* 链接文字更大 */
+a {
+  font-size: 1.0625rem;
+}
+
+/* 段落文字更大 */
+p {
+  font-size: 1.0625rem;
+  line-height: 1.8;
 }
 
 /* 自定义滚动条 */

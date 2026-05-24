@@ -520,8 +520,8 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
               >
                 <span className="text-xl">{dim.icon}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm">{dim.name}</div>
-                  <div className="text-xs opacity-70 truncate">{dim.description}</div>
+                  <div className="font-bold text-lg">{dim.name}</div>
+                  <div className="text-base opacity-70 truncate">{dim.description}</div>
                 </div>
               </button>
             ))}
@@ -529,11 +529,11 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
           
           {/* 进度统计 */}
           <div className="mt-6 rounded-lg bg-muted p-4">
-            <div className="mb-2 text-sm font-medium text-foreground">已记录</div>
+            <div className="mb-2 text-lg font-bold text-foreground">已记录</div>
             <div className="text-3xl font-bold text-primary">
               {data.conversations.length}
             </div>
-            <div className="text-xs text-muted-foreground">条对话</div>
+            <div className="text-base text-muted-foreground">条对话</div>
           </div>
         </div>
       </div>
@@ -552,10 +552,10 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                 {basicInfo.name || '点击填写基本信息'}
               </span>
               {basicInfo.birthYear && (
-                <span className="text-sm text-muted-foreground">· {basicInfo.birthYear}年</span>
+                <span className="text-lg text-muted-foreground">· {basicInfo.birthYear}年</span>
               )}
               {basicInfo.hometown && (
-                <span className="text-sm text-muted-foreground">· {basicInfo.hometown}</span>
+                <span className="text-lg text-muted-foreground">· {basicInfo.hometown}</span>
               )}
             </div>
             {showBasicInfoBar ? (
@@ -577,7 +577,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                       value={basicInfo.name}
                       onChange={(e) => handleBasicInfoChange('name', e.target.value)}
                       placeholder="姓名"
-                      className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="flex-1 rounded-lg border border-input bg-background px-4 py-3 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
                     <button
                       onClick={() => isRecording && activeVoiceField === 'name' ? stopRecording() : startRecording('name')}
@@ -609,7 +609,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                       value={basicInfo.birthYear}
                       onChange={(e) => handleBasicInfoChange('birthYear', e.target.value)}
                       placeholder="出生年份"
-                      className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="flex-1 rounded-lg border border-input bg-background px-4 py-3 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
                     <button
                       onClick={() => isRecording && activeVoiceField === 'birthYear' ? stopRecording() : startRecording('birthYear')}
@@ -641,7 +641,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                       value={basicInfo.hometown}
                       onChange={(e) => handleBasicInfoChange('hometown', e.target.value)}
                       placeholder="家乡"
-                      className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="flex-1 rounded-lg border border-input bg-background px-4 py-3 text-lg text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
                     <button
                       onClick={() => isRecording && activeVoiceField === 'hometown' ? stopRecording() : startRecording('hometown')}
@@ -672,16 +672,16 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
         <div className="border-b border-border p-4">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-muted-foreground">当前问题</div>
+              <div className="text-lg text-muted-foreground">当前问题</div>
               <div className="mt-1 font-medium text-foreground">
                 {DIMENSIONS[currentDimension].questions[currentQuestion]}
               </div>
             </div>
             <div className="flex gap-2">
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-base font-medium text-primary">
                 {DIMENSIONS[currentDimension].name}
               </span>
-              <span className="rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground">
+              <span className="rounded-full bg-muted px-3 py-1 text-base text-muted-foreground">
                 {currentQuestion + 1}/{DIMENSIONS[currentDimension].questions.length}
               </span>
             </div>
@@ -697,7 +697,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">👵👴</div>
               <p className="text-lg font-medium text-foreground">请先填写上方的基本信息</p>
-              <p className="text-sm text-muted-foreground mt-2">填写姓名后即可开始访谈</p>
+              <p className="text-lg text-muted-foreground mt-2">填写姓名后即可开始访谈</p>
             </div>
           ) : (
             <>
@@ -827,12 +827,12 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                 ) : isRecording && activeVoiceField === 'chat' ? (
                   <div className="text-center">
                     <p className="text-lg font-medium text-red-600 animate-pulse">正在录音...</p>
-                    <p className="text-sm text-muted-foreground mt-1">点击按钮停止录音</p>
+                    <p className="text-lg text-muted-foreground mt-1">点击按钮停止录音</p>
                   </div>
                 ) : (
                   <div className="text-center">
                     <p className="text-lg font-medium text-amber-700">点击按钮开始语音输入</p>
-                    <p className="text-sm text-muted-foreground mt-1">让老人直接说话，AI 会自动转成文字</p>
+                    <p className="text-lg text-muted-foreground mt-1">让老人直接说话，AI 会自动转成文字</p>
                   </div>
                 )}
               </div>
@@ -841,7 +841,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
               {userInput && (
                 <div className="mt-4 w-full max-w-md">
                   <div className="rounded-xl bg-muted p-4">
-                    <p className="text-sm text-muted-foreground mb-2">识别结果：</p>
+                    <p className="text-lg text-muted-foreground mb-2">识别结果：</p>
                     <p className="text-foreground">{userInput}</p>
                   </div>
                 </div>
@@ -892,7 +892,7 @@ export function InterviewSection({ data, onDataChange }: InterviewSectionProps) 
                 </button>
                 <button
                   onClick={handleNextQuestion}
-                  className="rounded-xl border border-border bg-card px-4 py-2 text-sm text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
+                  className="rounded-xl border border-border bg-card px-5 py-3 text-base text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
                 >
                   下一题 →
                 </button>

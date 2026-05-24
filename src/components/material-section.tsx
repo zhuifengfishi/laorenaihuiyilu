@@ -194,7 +194,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                 <div className="text-center">
                   <div className="mb-4 text-4xl">📸</div>
                   <p className="text-lg font-medium text-foreground">点击或拖拽上传照片</p>
-                  <p className="mt-2 text-sm text-muted-foreground">支持 JPG、PNG 格式，建议上传清晰的正面照</p>
+                  <p className="mt-2 text-lg text-muted-foreground">支持 JPG、PNG 格式，建议上传清晰的正面照</p>
                 </div>
               )}
             </div>
@@ -264,7 +264,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                 <div className="text-center">
                   <div className="mb-4 text-4xl">🎥</div>
                   <p className="text-lg font-medium text-foreground">点击或拖拽上传视频</p>
-                  <p className="mt-2 text-sm text-muted-foreground">支持 MP4、MOV 格式，建议拍摄老人说话、微笑等自然动作</p>
+                  <p className="mt-2 text-lg text-muted-foreground">支持 MP4、MOV 格式，建议拍摄老人说话、微笑等自然动作</p>
                 </div>
               )}
             </div>
@@ -280,7 +280,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                         <div className="text-2xl">🎬</div>
                         <div>
                           <div className="font-medium text-foreground">视频 {index + 1}</div>
-                          <div className="text-sm text-muted-foreground">已上传</div>
+                          <div className="text-base text-muted-foreground">已上传</div>
                         </div>
                       </div>
                       <button
@@ -290,7 +290,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                             videos: data.videos.filter((_, i) => i !== index),
                           });
                         }}
-                        className="rounded-lg bg-destructive/10 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20"
+                        className="rounded-lg bg-destructive/10 px-4 py-2 text-base font-medium text-destructive transition-colors hover:bg-destructive/20"
                       >
                         删除
                       </button>
@@ -326,17 +326,17 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                 {isRecording ? (
                   <div className="text-center">
                     <div className="text-3xl">⏹️</div>
-                    <div className="mt-1 text-sm">{formatTime(recordingTime)}</div>
+                    <div className="mt-1 text-lg">{formatTime(recordingTime)}</div>
                   </div>
                 ) : (
                   <div className="text-center">
                     <div className="text-4xl">🎙️</div>
-                    <div className="mt-1 text-sm">点击录音</div>
+                    <div className="mt-1 text-lg">点击录音</div>
                   </div>
                 )}
               </button>
 
-              <p className="mt-6 text-center text-sm text-muted-foreground">
+              <p className="mt-6 text-center text-lg text-muted-foreground">
                 {isRecording
                   ? '正在录音...请让老人多说一些话，包括方言、日常用语等'
                   : '建议录制1-3分钟，让老人自然地讲述一些话题'}
@@ -345,7 +345,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
               {/* 录音提示 */}
               <div className="mt-8 rounded-xl bg-muted p-6">
                 <h4 className="mb-3 font-medium text-foreground">录音建议</h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-lg text-muted-foreground">
                   <li>• 请老人用平常的语气说话，不需要刻意</li>
                   <li>• 可以聊聊家常、回忆往事、讲讲方言</li>
                   <li>• 保持环境安静，避免噪音干扰</li>
@@ -365,7 +365,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                         <div className="text-2xl">🔊</div>
                         <div>
                           <div className="font-medium text-foreground">录音 {index + 1}</div>
-                          <div className="text-sm text-muted-foreground">时长: {formatTime(voice.duration)}</div>
+                          <div className="text-base text-muted-foreground">时长: {formatTime(voice.duration)}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -377,7 +377,7 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
                               voiceSamples: data.voiceSamples.filter((_, i) => i !== index),
                             });
                           }}
-                          className="rounded-lg bg-destructive/10 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/20"
+                          className="rounded-lg bg-destructive/10 px-4 py-2 text-base font-medium text-destructive transition-colors hover:bg-destructive/20"
                         >
                           删除
                         </button>
@@ -398,21 +398,21 @@ export function MaterialSection({ data, onDataChange }: MaterialSectionProps) {
               <div className="text-3xl">📷</div>
               <div>
                 <div className="text-2xl font-bold text-primary">{data.photos.length}</div>
-                <div className="text-sm text-muted-foreground">张照片</div>
+                <div className="text-base text-muted-foreground">张照片</div>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-accent/5 p-4">
               <div className="text-3xl">🎬</div>
               <div>
                 <div className="text-2xl font-bold text-accent">{data.videos.length}</div>
-                <div className="text-sm text-muted-foreground">个视频</div>
+                <div className="text-base text-muted-foreground">个视频</div>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-lg bg-chart-3/5 p-4">
               <div className="text-3xl">🎤</div>
               <div>
                 <div className="text-2xl font-bold text-chart-3">{data.voiceSamples.length}</div>
-                <div className="text-sm text-muted-foreground">段声音</div>
+                <div className="text-base text-muted-foreground">段声音</div>
               </div>
             </div>
           </div>

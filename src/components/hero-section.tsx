@@ -47,8 +47,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         </div>
         
         <div className="relative text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-            <span>🌾</span>
+          <div className="mb-4 inline-flex items-center gap-3 rounded-full bg-primary/10 px-6 py-3 text-base font-medium text-primary">
+            <span className="text-xl">🌾</span>
             <span>乡村老人数字回忆录平台</span>
           </div>
           
@@ -56,7 +56,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             乡音留痕<span className="text-primary">·</span>岁月永存
           </h1>
           
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-2xl text-xl text-muted-foreground leading-relaxed">
             每一位乡村老人都是一座<strong className="text-foreground">活着的博物馆</strong>
             <br />
             用AI技术留存他们的人生故事，让乡土记忆永久传承
@@ -65,13 +65,13 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <button
               onClick={() => onNavigate('interview')}
-              className="rounded-xl bg-primary px-8 py-4 text-lg font-medium text-primary-foreground shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+              className="rounded-xl bg-primary px-10 py-5 text-xl font-bold text-primary-foreground shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
             >
               开始访谈记录
             </button>
             <button
               onClick={() => onNavigate('material')}
-              className="rounded-xl border-2 border-primary/30 bg-card px-8 py-4 text-lg font-medium text-foreground transition-all hover:border-primary hover:shadow-md"
+              className="rounded-xl border-2 border-primary/30 bg-card px-10 py-5 text-xl font-bold text-foreground transition-all hover:border-primary hover:shadow-md"
             >
               上传素材
             </button>
@@ -81,7 +81,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
       {/* 功能介绍 */}
       <section className="mt-16">
-        <h2 className="mb-8 text-center font-serif text-2xl font-bold text-foreground">
+        <h2 className="mb-8 text-center font-serif text-3xl font-bold text-foreground">
           三大核心功能
         </h2>
         
@@ -92,13 +92,13 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               onClick={() => onNavigate(feature.key as AppStep)}
               className="group rounded-2xl border border-border bg-card p-8 text-left shadow-sm transition-all hover:-translate-y-2 hover:shadow-lg"
             >
-              <div className="mb-6 text-4xl">{feature.icon}</div>
+              <div className="mb-6 text-5xl">{feature.icon}</div>
               
-              <h3 className="mb-1 text-xl font-bold text-foreground">
+              <h3 className="mb-2 text-2xl font-bold text-foreground">
                 {feature.title}
               </h3>
-              <p className="mb-4 text-sm text-primary">{feature.subtitle}</p>
-              <p className="mb-6 text-sm leading-relaxed text-muted-foreground">
+              <p className="mb-4 text-lg text-primary font-medium">{feature.subtitle}</p>
+              <p className="mb-6 text-lg leading-relaxed text-muted-foreground">
                 {feature.description}
               </p>
               
@@ -106,16 +106,16 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 {feature.features.map((f) => (
                   <span
                     key={f}
-                    className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
+                    className="rounded-full bg-muted px-4 py-1.5 text-base font-medium text-muted-foreground"
                   >
                     {f}
                   </span>
                 ))}
               </div>
               
-              <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="mt-6 flex items-center gap-2 text-base font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
                 <span>立即使用</span>
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -128,10 +128,10 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
       <section className="mt-16">
         <div className="rounded-3xl bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-8 md:p-12">
           <div className="mb-8 text-center">
-            <h2 className="font-serif text-2xl font-bold text-foreground md:text-3xl">
+            <h2 className="font-serif text-3xl font-bold text-foreground md:text-4xl">
               每一位乡村老人，都值得被记录
             </h2>
-            <p className="mt-3 text-lg text-muted-foreground">
+            <p className="mt-3 text-xl text-muted-foreground">
               他们的一生，是乡村的历史，是家族的根，是岁月的诗
             </p>
           </div>
@@ -139,10 +139,10 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           {/* 痛点说明 */}
           <div className="mb-10 rounded-2xl border border-amber-200 bg-white/60 p-6">
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 text-3xl">💔</div>
+              <div className="flex-shrink-0 text-4xl">💔</div>
               <div>
-                <h3 className="mb-2 font-semibold text-foreground">时光正在流逝，记忆正在消亡</h3>
-                <ul className="space-y-2 text-muted-foreground">
+                <h3 className="mb-3 text-xl font-bold text-foreground">时光正在流逝，记忆正在消亡</h3>
+                <ul className="space-y-3 text-lg text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-amber-600">•</span>
                     <span>乡村老龄化加剧，老一辈亲历的历史、民俗、乡音正在快速消亡</span>
@@ -166,35 +166,35 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
           {/* 核心价值 */}
           <div className="mb-10">
-            <h3 className="mb-6 text-center font-semibold text-foreground">
+            <h3 className="mb-6 text-center text-xl font-bold text-foreground">
               我们相信，记录一位老人，就是保存一段历史
             </h3>
             <div className="grid gap-6 md:grid-cols-4">
-              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
-                <div className="mb-3 text-3xl">👴👵</div>
-                <h4 className="mb-2 font-semibold text-foreground">每位老人都珍贵</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="rounded-xl bg-white/70 p-6 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-4xl">👴👵</div>
+                <h4 className="mb-2 text-lg font-bold text-foreground">每位老人都珍贵</h4>
+                <p className="text-base text-muted-foreground">
                   无论贫富贵贱，每个人的一生都独一无二，值得被完整记录
                 </p>
               </div>
-              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
-                <div className="mb-3 text-3xl">📖</div>
-                <h4 className="mb-2 font-semibold text-foreground">传承家风智慧</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="rounded-xl bg-white/70 p-6 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-4xl">📖</div>
+                <h4 className="mb-2 text-lg font-bold text-foreground">传承家风智慧</h4>
+                <p className="text-base text-muted-foreground">
                   老人的人生感悟、处世智慧，是留给子孙最宝贵的财富
                 </p>
               </div>
-              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
-                <div className="mb-3 text-3xl">🏠</div>
-                <h4 className="mb-2 font-semibold text-foreground">保存乡村记忆</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="rounded-xl bg-white/70 p-6 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-4xl">🏠</div>
+                <h4 className="mb-2 text-lg font-bold text-foreground">保存乡村记忆</h4>
+                <p className="text-base text-muted-foreground">
                   农耕技艺、民俗传统、方言乡音，都藏在老人的记忆里
                 </p>
               </div>
-              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
-                <div className="mb-3 text-3xl">❤️</div>
-                <h4 className="mb-2 font-semibold text-foreground">情感永恒延续</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="rounded-xl bg-white/70 p-6 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-4xl">❤️</div>
+                <h4 className="mb-2 text-lg font-bold text-foreground">情感永恒延续</h4>
+                <p className="text-base text-muted-foreground">
                   让子孙后代能听到祖辈的声音，看到祖辈的容貌，感受祖辈的爱
                 </p>
               </div>
@@ -202,51 +202,51 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           </div>
 
           {/* 温暖的引语 */}
-          <div className="rounded-2xl bg-primary/10 p-6 text-center">
-            <blockquote className="font-serif text-xl italic text-foreground md:text-2xl">
+          <div className="rounded-2xl bg-primary/10 p-8 text-center">
+            <blockquote className="font-serif text-2xl italic text-foreground md:text-3xl">
               "一位老人的离去，就像一座图书馆被烧毁。"
             </blockquote>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4 text-lg text-muted-foreground">
               ——非洲谚语
             </p>
-            <p className="mt-4 font-medium text-primary">
+            <p className="mt-4 text-xl font-bold text-primary">
               我们要做的，就是在"图书馆"消失之前，把每一本书都记录下来
             </p>
           </div>
 
           {/* 适合的人群 */}
           <div className="mt-8">
-            <h3 className="mb-4 text-center font-semibold text-foreground">
+            <h3 className="mb-6 text-center text-xl font-bold text-foreground">
               这个平台适合每一位乡村老人
             </h3>
             <div className="flex flex-wrap justify-center gap-3">
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 🌾 一辈子种地的老农民
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 👵 带大几代孩子的老奶奶
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 👨‍🏫 退休的乡村教师
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 🏥 服务乡里几十年的赤脚医生
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 🔨 掌握老手艺的匠人
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 🎭 熟悉民俗传统的老人
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 💪 经历过时代变迁的长者
               </span>
-              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+              <span className="rounded-full bg-white/70 px-5 py-2.5 text-base text-foreground shadow-sm">
                 👨‍👩‍👧‍👦 想给子孙留点什么的老人
               </span>
             </div>
-            <p className="mt-6 text-center text-muted-foreground">
-              <strong className="text-primary">无需识字、无需手写</strong>
+            <p className="mt-6 text-center text-lg text-muted-foreground">
+              <strong className="text-primary text-xl">无需识字、无需手写</strong>
               ，只需要开口说话，AI 帮您完成一切
             </p>
           </div>
@@ -256,10 +256,10 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
       {/* 成果展示 */}
       <section className="mt-16">
         <div className="mb-8 text-center">
-          <h2 className="font-serif text-2xl font-bold text-foreground">
+          <h2 className="font-serif text-3xl font-bold text-foreground">
             成果品展示
           </h2>
-          <p className="mt-2 text-muted-foreground">
+          <p className="mt-3 text-xl text-muted-foreground">
             为每一位老人打造独一无二的数字回忆录，让人生故事代代相传
           </p>
         </div>
@@ -277,17 +277,17 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 />
               </div>
               <div className="flex-1">
-                <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
                   <span>📚</span>
                   <span>文字成果</span>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-foreground">一生回忆录</h3>
-                <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                <h3 className="mb-2 text-2xl font-bold text-foreground">一生回忆录</h3>
+                <p className="mb-4 text-lg leading-relaxed text-muted-foreground">
                   AI自动整理润色，从童年到晚年，完整记录老人一生的重要时刻、人生感悟、家族故事。保留原汁原味的语言风格，附精美排版设计。
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-700">电子版云端存档</span>
-                  <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-700">实体精装书印刷</span>
+                  <span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm text-amber-700">电子版云端存档</span>
+                  <span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm text-amber-700">实体精装书印刷</span>
                 </div>
               </div>
             </div>
@@ -304,17 +304,17 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 />
               </div>
               <div className="flex-1">
-                <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
+                <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700">
                   <span>🎨</span>
                   <span>视觉成果</span>
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-foreground">人生时间轴</h3>
-                <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                <h3 className="mb-2 text-2xl font-bold text-foreground">人生时间轴</h3>
+                <p className="mb-4 text-lg leading-relaxed text-muted-foreground">
                   可视化展示一生重要节点：出生、求学、工作、成家、退休...每个时刻都有专属标记，配合照片和文字说明，一目了然。
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-green-50 px-2 py-1 text-xs text-green-700">高清海报打印</span>
-                  <span className="rounded-full bg-green-50 px-2 py-1 text-xs text-green-700">重要时刻标注</span>
+                  <span className="rounded-full bg-green-50 px-3 py-1.5 text-sm text-green-700">高清海报打印</span>
+                  <span className="rounded-full bg-green-50 px-3 py-1.5 text-sm text-green-700">重要时刻标注</span>
                 </div>
               </div>
             </div>
@@ -328,8 +328,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
                 💝
               </div>
-              <h4 className="mb-2 font-semibold text-foreground">个人与家族价值</h4>
-              <p className="text-sm text-muted-foreground">
+              <h4 className="mb-2 text-xl font-bold text-foreground">个人与家族价值</h4>
+              <p className="text-lg text-muted-foreground">
                 为老人完成人生总结，为子女留存祖辈容貌、声音、故事，成为代代相传的家族珍藏
               </p>
             </div>
@@ -337,8 +337,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-2xl">
                 🏘️
               </div>
-              <h4 className="mb-2 font-semibold text-foreground">乡村文化价值</h4>
-              <p className="text-sm text-muted-foreground">
+              <h4 className="mb-2 text-xl font-bold text-foreground">乡村文化价值</h4>
+              <p className="text-lg text-muted-foreground">
                 批量留存乡村民间历史、农耕文化、方言乡音，丰富村史馆内容，助力乡村文化振兴
               </p>
             </div>
@@ -346,8 +346,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-chart-3/10 text-2xl">
                 🌟
               </div>
-              <h4 className="mb-2 font-semibold text-foreground">文创创新价值</h4>
-              <p className="text-sm text-muted-foreground">
+              <h4 className="mb-2 text-xl font-bold text-foreground">文创创新价值</h4>
+              <p className="text-lg text-muted-foreground">
                 AI数字文创融合人文温度与前沿技术，开创「人文记忆+数字文创」全新赛道
               </p>
             </div>
@@ -364,8 +364,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               className="h-40 w-full object-cover transition-transform group-hover:scale-105"
             />
             <div className="p-4">
-              <h4 className="font-semibold text-foreground">家族树图谱</h4>
-              <p className="mt-1 text-sm text-muted-foreground">可视化家族关系，记录世代传承</p>
+              <h4 className="text-xl font-bold text-foreground">家族树图谱</h4>
+              <p className="mt-1 text-lg text-muted-foreground">可视化家族关系，记录世代传承</p>
             </div>
           </div>
 
@@ -377,8 +377,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               className="h-40 w-full object-cover transition-transform group-hover:scale-105"
             />
             <div className="p-4">
-              <h4 className="font-semibold text-foreground">人生金句海报</h4>
-              <p className="mt-1 text-sm text-muted-foreground">提炼智慧金句，精美设计装裱</p>
+              <h4 className="text-xl font-bold text-foreground">人生金句海报</h4>
+              <p className="mt-1 text-lg text-muted-foreground">提炼智慧金句，精美设计装裱</p>
             </div>
           </div>
 
@@ -390,30 +390,30 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               className="h-40 w-full object-cover transition-transform group-hover:scale-105"
             />
             <div className="p-4">
-              <h4 className="font-semibold text-foreground">数字人分身</h4>
-              <p className="mt-1 text-sm text-muted-foreground">AI复刻容貌神态，永久留存形象</p>
+              <h4 className="text-xl font-bold text-foreground">数字人分身</h4>
+              <p className="mt-1 text-lg text-muted-foreground">AI复刻容貌神态，永久留存形象</p>
             </div>
           </div>
         </div>
 
         {/* 成果套装推荐 */}
         <div className="mt-8 rounded-2xl border border-border bg-card p-6">
-          <h3 className="mb-4 text-center font-semibold text-foreground">🎁 成果套装推荐</h3>
+          <h3 className="mb-4 text-center text-2xl font-bold text-foreground">🎁 成果套装推荐</h3>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-xl border border-dashed border-border p-4 text-center">
-              <div className="mb-2 text-lg font-bold text-foreground">基础套装</div>
-              <div className="text-sm text-muted-foreground">回忆录 + 家书 + 家谱</div>
-              <div className="mt-2 text-xs text-muted-foreground">适合家庭珍藏</div>
+              <div className="mb-2 text-xl font-bold text-foreground">基础套装</div>
+              <div className="text-lg text-muted-foreground">回忆录 + 家书 + 家谱</div>
+              <div className="mt-2 text-base text-muted-foreground">适合家庭珍藏</div>
             </div>
             <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4 text-center">
-              <div className="mb-1 text-xs font-medium text-primary">🔥 热门推荐</div>
-              <div className="mb-2 text-lg font-bold text-foreground">珍藏套装</div>
-              <div className="text-sm text-muted-foreground">基础 + 时间轴 + 金句海报 + 原声</div>
+              <div className="mb-1 text-base font-medium text-primary">🔥 热门推荐</div>
+              <div className="mb-2 text-xl font-bold text-foreground">珍藏套装</div>
+              <div className="text-lg text-muted-foreground">基础 + 时间轴 + 金句海报 + 原声</div>
             </div>
             <div className="rounded-xl border border-dashed border-border p-4 text-center">
-              <div className="mb-2 text-lg font-bold text-foreground">传家套装</div>
-              <div className="text-sm text-muted-foreground">珍藏 + 数字人 + 家族树 + 家训</div>
-              <div className="mt-2 text-xs text-muted-foreground">代代相传</div>
+              <div className="mb-2 text-xl font-bold text-foreground">传家套装</div>
+              <div className="text-lg text-muted-foreground">珍藏 + 数字人 + 家族树 + 家训</div>
+              <div className="mt-2 text-base text-muted-foreground">代代相传</div>
             </div>
           </div>
         </div>
@@ -422,10 +422,10 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         <div className="mt-8 text-center">
           <button
             onClick={() => onNavigate('interview')}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-medium text-primary-foreground shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-10 py-5 text-2xl font-bold text-primary-foreground shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl"
           >
             <span>开始为老人记录一生</span>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </button>
