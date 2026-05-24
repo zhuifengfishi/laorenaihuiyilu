@@ -30,6 +30,7 @@ const allOutputs: Array<{
   badge?: string;
   category: string;
   categoryColor: string;
+  previewImage: string;
 }> = [
   {
     key: 'memoir',
@@ -39,6 +40,7 @@ const allOutputs: Array<{
     features: ['自动整理润色', '精美排版设计', '电子版+实体书'],
     category: '文字成果',
     categoryColor: 'bg-amber-100 text-amber-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_02bf052f-2790-41af-b7b9-116900659ced.jpeg?sign=1811122721-4fc4615ca2-0-e356c3ee0a2e3eee87934904df57e12789fc563ef6c0d82813977f1feadb25c4',
   },
   {
     key: 'letter',
@@ -48,6 +50,7 @@ const allOutputs: Array<{
     features: ['个性化内容', '手写信风格', '多版本生成'],
     category: '文字成果',
     categoryColor: 'bg-amber-100 text-amber-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_5c69bba4-0abe-48a5-8e6a-78d41e0c33fb.jpeg?sign=1811122722-6728a9602e-0-8dfef15e87907d44dda9c1c4ca5d9a62a848c7827cd118ac9cc37ef1ef8fef5a',
   },
   {
     key: 'genealogy',
@@ -57,6 +60,7 @@ const allOutputs: Array<{
     features: ['家族关系图', '世代传承记录', '多人协作完善'],
     category: '文字成果',
     categoryColor: 'bg-amber-100 text-amber-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_408dd16a-87e4-4411-88f6-8c1fbecd9e64.jpeg?sign=1811122721-d0039eb598-0-6c707c7c7f1193857ec192795953e61ea558b460478a79c86009532e93e9cbe5',
   },
   {
     key: 'family-motto',
@@ -67,6 +71,7 @@ const allOutputs: Array<{
     badge: '新',
     category: '文字成果',
     categoryColor: 'bg-amber-100 text-amber-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_7115978d-de70-4e35-82aa-145c29c607b1.jpeg?sign=1811122724-0cdab4a1e1-0-e2db50cc6af2e5fd8c27c37cb597a26733072db65455dc633a3c8d913b23496d',
   },
   {
     key: 'timeline',
@@ -77,6 +82,7 @@ const allOutputs: Array<{
     badge: '热门',
     category: '视觉成果',
     categoryColor: 'bg-purple-100 text-purple-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_1a958d28-a69d-4ebb-a3dd-b21f957c404b.jpeg?sign=1811122733-88d24936a8-0-442c226ffce5f6334f17e7f695be3c894cf38ff07e1dc7a60387bafdb7dd3c43',
   },
   {
     key: 'family-tree',
@@ -87,6 +93,7 @@ const allOutputs: Array<{
     badge: '新',
     category: '视觉成果',
     categoryColor: 'bg-purple-100 text-purple-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_5b5c56f9-9853-4b3c-ad1c-3c240ad3f5d5.jpeg?sign=1811122723-60acdfbb55-0-6cf91fa0b17900230460a7198468346036c1045f519ff0cd8418dd08fdf46762',
   },
   {
     key: 'quote-poster',
@@ -97,6 +104,7 @@ const allOutputs: Array<{
     badge: '热门',
     category: '视觉成果',
     categoryColor: 'bg-purple-100 text-purple-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_5002cc69-d2b2-4d26-a59b-c75de7b1ac2b.jpeg?sign=1811122721-f09466d0fd-0-296be5563777be1093084fcc689b3c7d900017eabef4eacf2203ee5ad8e55af8',
   },
   {
     key: 'voice-album',
@@ -106,6 +114,7 @@ const allOutputs: Array<{
     features: ['原声保存', '方言收录', '云端存档'],
     category: '声音成果',
     categoryColor: 'bg-blue-100 text-blue-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_fb08e901-ef6f-4e6d-8a5d-f3c2f05409d4.jpeg?sign=1811122722-aec5a90a12-0-ab1e152286f74d1fa1a73d301e21fea9af343eecf3e9de18fe205664fccd3373',
   },
   {
     key: 'digital-human',
@@ -116,6 +125,7 @@ const allOutputs: Array<{
     badge: '核心',
     category: '视频成果',
     categoryColor: 'bg-red-100 text-red-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_9d3defab-3462-4db5-b2c1-53a9fc493655.jpeg?sign=1811122720-87b9322eb5-0-4c5311daece9f8854bf1ab36ac7760987768487897a52717e4d3e6409f3963af',
   },
   {
     key: 'blessing-video',
@@ -126,6 +136,7 @@ const allOutputs: Array<{
     badge: '新',
     category: '视频成果',
     categoryColor: 'bg-red-100 text-red-700',
+    previewImage: 'https://coze-coding-project.tos.coze.site/coze_storage_7643115594014949416/image/generate_image_004e8395-40f4-4155-847f-1ad1a42333b5.jpeg?sign=1811122720-9092592aa3-0-13b9eae574cd4af4770a762e53bfb442116bdffd9dfcb0821b50c723f01c1c69',
   },
 ];
 
@@ -283,27 +294,40 @@ export function OutputSection({ interviewData, materialData }: OutputSectionProp
             <button
               key={output.key}
               onClick={() => setActiveOutput(output.key)}
-              className={`relative overflow-hidden rounded-2xl border p-4 text-left transition-all ${
+              className={`relative overflow-hidden rounded-2xl border p-0 text-left transition-all ${
                 activeOutput === output.key
-                  ? 'border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20'
+                  ? 'border-primary shadow-lg ring-2 ring-primary/20'
                   : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
               }`}
             >
-              {/* 分类标签 */}
-              <span className={`absolute right-2 top-2 rounded-full px-3 py-1 text-sm font-medium ${output.categoryColor}`}>
-                {output.category}
-              </span>
-              
-              {/* 热门/新标签 */}
-              {output.badge && (
-                <span className="absolute left-2 top-2 rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground">
-                  {output.badge}
+              {/* 预览图片 */}
+              <div className="relative h-32 w-full overflow-hidden bg-muted">
+                <img 
+                  src={output.previewImage} 
+                  alt={output.label}
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+                {/* 分类标签 */}
+                <span className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-xs font-medium ${output.categoryColor}`}>
+                  {output.category}
                 </span>
-              )}
+                
+                {/* 热门/新标签 */}
+                {output.badge && (
+                  <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
+                    {output.badge}
+                  </span>
+                )}
+              </div>
               
-              <div className="mt-6 mb-3 text-4xl">{output.icon}</div>
-              <h3 className="mb-2 text-lg font-bold text-foreground">{output.label}</h3>
-              <p className="line-clamp-2 text-sm text-muted-foreground leading-relaxed">{output.description}</p>
+              {/* 文字信息 */}
+              <div className="p-3">
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="text-2xl">{output.icon}</span>
+                  <h3 className="text-base font-bold text-foreground">{output.label}</h3>
+                </div>
+                <p className="line-clamp-2 text-xs text-muted-foreground leading-relaxed">{output.description}</p>
+              </div>
             </button>
           ))}
         </div>
