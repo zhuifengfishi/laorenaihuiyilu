@@ -124,6 +124,135 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         </div>
       </section>
 
+      {/* 为什么每个老人都值得记录 */}
+      <section className="mt-16">
+        <div className="rounded-3xl bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-8 md:p-12">
+          <div className="mb-8 text-center">
+            <h2 className="font-serif text-2xl font-bold text-foreground md:text-3xl">
+              每一位乡村老人，都值得被记录
+            </h2>
+            <p className="mt-3 text-lg text-muted-foreground">
+              他们的一生，是乡村的历史，是家族的根，是岁月的诗
+            </p>
+          </div>
+
+          {/* 痛点说明 */}
+          <div className="mb-10 rounded-2xl border border-amber-200 bg-white/60 p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 text-3xl">💔</div>
+              <div>
+                <h3 className="mb-2 font-semibold text-foreground">时光正在流逝，记忆正在消亡</h3>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600">•</span>
+                    <span>乡村老龄化加剧，老一辈亲历的历史、民俗、乡音正在快速消亡</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600">•</span>
+                    <span>传统手写回忆录门槛高，老人提笔困难、晚辈无暇记录</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600">•</span>
+                    <span>大量珍贵的乡土文化素材随岁月流失，乡土文化面临断层危机</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600">•</span>
+                    <span>每一位老人的离去，都是一座"乡村博物馆"的消失</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* 核心价值 */}
+          <div className="mb-10">
+            <h3 className="mb-6 text-center font-semibold text-foreground">
+              我们相信，记录一位老人，就是保存一段历史
+            </h3>
+            <div className="grid gap-6 md:grid-cols-4">
+              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-3xl">👴👵</div>
+                <h4 className="mb-2 font-semibold text-foreground">每位老人都珍贵</h4>
+                <p className="text-sm text-muted-foreground">
+                  无论贫富贵贱，每个人的一生都独一无二，值得被完整记录
+                </p>
+              </div>
+              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-3xl">📖</div>
+                <h4 className="mb-2 font-semibold text-foreground">传承家风智慧</h4>
+                <p className="text-sm text-muted-foreground">
+                  老人的人生感悟、处世智慧，是留给子孙最宝贵的财富
+                </p>
+              </div>
+              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-3xl">🏠</div>
+                <h4 className="mb-2 font-semibold text-foreground">保存乡村记忆</h4>
+                <p className="text-sm text-muted-foreground">
+                  农耕技艺、民俗传统、方言乡音，都藏在老人的记忆里
+                </p>
+              </div>
+              <div className="rounded-xl bg-white/70 p-5 text-center shadow-sm transition-all hover:shadow-md">
+                <div className="mb-3 text-3xl">❤️</div>
+                <h4 className="mb-2 font-semibold text-foreground">情感永恒延续</h4>
+                <p className="text-sm text-muted-foreground">
+                  让子孙后代能听到祖辈的声音，看到祖辈的容貌，感受祖辈的爱
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 温暖的引语 */}
+          <div className="rounded-2xl bg-primary/10 p-6 text-center">
+            <blockquote className="font-serif text-xl italic text-foreground md:text-2xl">
+              "一位老人的离去，就像一座图书馆被烧毁。"
+            </blockquote>
+            <p className="mt-4 text-muted-foreground">
+              ——非洲谚语
+            </p>
+            <p className="mt-4 font-medium text-primary">
+              我们要做的，就是在"图书馆"消失之前，把每一本书都记录下来
+            </p>
+          </div>
+
+          {/* 适合的人群 */}
+          <div className="mt-8">
+            <h3 className="mb-4 text-center font-semibold text-foreground">
+              这个平台适合每一位乡村老人
+            </h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                🌾 一辈子种地的老农民
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                👵 带大几代孩子的老奶奶
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                👨‍🏫 退休的乡村教师
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                🏥 服务乡里几十年的赤脚医生
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                🔨 掌握老手艺的匠人
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                🎭 熟悉民俗传统的老人
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                💪 经历过时代变迁的长者
+              </span>
+              <span className="rounded-full bg-white/70 px-4 py-2 text-sm text-foreground shadow-sm">
+                👨‍👩‍👧‍👦 想给子孙留点什么的老人
+              </span>
+            </div>
+            <p className="mt-6 text-center text-muted-foreground">
+              <strong className="text-primary">无需识字、无需手写</strong>
+              ，只需要开口说话，AI 帮您完成一切
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* 成果展示 */}
       <section className="mt-16">
         <div className="mb-8 text-center">
